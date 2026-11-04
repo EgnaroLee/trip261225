@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0f1720">
+<title>플랜북</title>
+<style>
+:root{--bg:#f4f2ec;--card:#fff;--ink:#1b2430;--mut:#6a7380;--line:#e4e0d6;--acc:#a97a2b;--onacc:#fff;--navy:#0f1720;--warn:#b42318;color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0c131b;--card:#16202b;--ink:#e9edf2;--mut:#95a1af;--line:#263341;--acc:#d9a94f;--onacc:#1a1205;--warn:#f87171;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0c131b;--card:#16202b;--ink:#e9edf2;--mut:#95a1af;--line:#263341;--acc:#d9a94f;--onacc:#1a1205;--warn:#f87171;color-scheme:dark}
+*{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:calc(env(safe-area-inset-top,0px) + 56px)}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.6 system-ui,-apple-system,"Apple SD Gothic Neo","Noto Sans KR",sans-serif}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--navy);z-index:10}
+.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:9;background:var(--navy);color:#fff;display:flex;align-items:center;gap:6px;padding:8px 12px}
+.bar b{letter-spacing:.14em;font-size:13px;flex:1}.bar .sub{color:#aab4c0;font-size:12px}
+.bar button{background:transparent;color:#fff;border-color:#ffffff44;font-size:12px;padding:5px 9px}.bar .pri{background:var(--acc);color:var(--onacc);border-color:var(--acc)}
+.side{display:none}.side h4{margin:16px 0 4px;font-size:11px;letter-spacing:.14em;color:var(--acc);text-transform:uppercase}
+.side a{display:block;padding:5px 8px;border-radius:6px;color:var(--ink);text-decoration:none;font-size:14px}.side a:hover{background:var(--bg)}
+.bnav{position:fixed;left:0;right:0;bottom:0;z-index:9;display:flex;overflow-x:auto;background:var(--navy);padding:6px 8px calc(6px + env(safe-area-inset-bottom,0px))}
+.bnav a{flex:none;color:#cfd6df;text-decoration:none;font-size:12px;padding:6px 10px}
+main{padding-bottom:64px}section{max-width:860px;margin:0 auto;padding:28px 16px}
+.cover{max-width:none;background:linear-gradient(160deg,#0f1720,#1f3047);color:#fff;text-align:center;padding:64px 20px}
+.cover h1{font:700 clamp(28px,6vw,44px)/1.25 Georgia,"Noto Serif KR",serif;margin:14px 0 6px}.cover p{margin:4px 0;color:#d5dbe3}.cover .en{color:#d9a94f}
+.en{color:var(--acc);font-size:12px;letter-spacing:.14em;text-transform:uppercase}h2{font-size:26px;margin:4px 0 14px}h3{margin:18px 0 8px;font-size:16px}
+.mut,.sub{color:var(--mut);font-size:13px}.big{font-size:20px;display:block}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:10px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 14px;margin-bottom:10px}.grid .card{margin:0}
+.stat{text-align:center}.stat b{display:block;font-size:18px}
+.kv{display:flex;gap:10px;font-size:14px}.kv span{color:var(--mut);flex:none;width:64px}
+.note{color:var(--mut);white-space:pre-wrap;font-size:14px}a{color:var(--acc)}
+.tl{border-left:2px solid var(--line);padding:2px 0 14px 14px;margin-left:6px;position:relative}
+.tl::before{content:"";position:absolute;left:-6px;top:7px;width:10px;height:10px;border-radius:50%;background:var(--acc)}.tm{color:var(--acc);font-weight:700;margin-right:6px}
+button{font:inherit;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:8px;padding:6px 10px;cursor:pointer}
+.dng{color:var(--warn)}.add{width:100%;border-style:dashed;margin:4px 0 10px}.acts{display:flex;gap:6px;margin-top:4px}
+input,textarea,select{width:100%;font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:7px 9px;margin:3px 0}
+select{width:auto}textarea{min-height:70px}.row{display:flex;gap:6px;align-items:center}
+input[type=checkbox]{width:auto;margin:5px 0 0}label.ck{display:flex;gap:10px;padding:5px 0}.done span{text-decoration:line-through;color:var(--mut)}
+@media(min-width:960px){.side{display:block;position:fixed;top:46px;left:0;bottom:0;width:232px;overflow:auto;padding:12px 14px;background:var(--card);border-right:1px solid var(--line)}main{padding:0 0 30px 232px}.bnav{display:none}}
+</style></head>
+<body><div id="app"></div>
+<script>
+const KEY='planbook:v1';
+const sample={title:'프랑스부터 스페인까지,',sub:'여행자님을 위한 플랜북',kicker:'make your own europe',code:'PB-0001',start:'2027-07-26',airline:'아시아나항공',people:'총 2명',
+overview:'직접 만들고 고치는 나만의 여행 플랜북입니다. 관리 버튼을 눌러 일정, 숙소, 티켓, 맛집을 자유롭게 수정하세요.',
+days:[
+{city:'파리',items:[{time:'17:20',title:'파리 도착 · 호텔 체크인',place:'Paris Charles de Gaulle Airport',note:'공항에서 시내로 이동'},{time:'19:30',title:'에펠탑 일몰·야경',place:'Eiffel Tower',note:'트로카데로 광장에서 감상'}],foods:[{name:'Carette',cat:'파리 · 카페',rate:'3.9',note:'샌드위치, 마카롱, 페이스트리로 유명한 곳'}]},
+{city:'파리',items:[{time:'08:50',title:'루브르 박물관 투어',place:'Louvre Museum',note:'미팅 10분 전 도착'},{time:'14:00',title:'몽마르트 언덕',place:'Sacré-Cœur Basilica',note:'화가의 거리, 사랑해 벽'}],foods:[]},
+{city:'파리',items:[{time:'09:00',title:'베르사유 궁전',place:'Palace of Versailles',note:''},{time:'15:30',title:'오르세 미술관',place:"Musée d'Orsay",note:''}],foods:[]},
+{city:'바르셀로나',items:[{time:'14:15',title:'파리 → 바르셀로나 이동',place:'Paris Orly Airport',note:'출발 2시간 전 도착'},{time:'19:00',title:'람블라스 · 보케리아 시장',place:'La Rambla Barcelona',note:''}],foods:[]},
+{city:'바르셀로나',items:[{time:'08:30',title:'가우디 투어',place:'Casa Milà',note:''},{time:'17:45',title:'사그라다 파밀리아',place:'Sagrada Familia',note:'입장 시간 엄수'}],foods:[]}],
+hotels:[{name:'파리 호텔 (예시)',city:'파리',ci:'07.26 14:00',co:'07.29 12:00',addr:'',conf:''},{name:'바르셀로나 호텔 (예시)',city:'바르셀로나',ci:'07.29 15:00',co:'07.31 12:00',addr:'',conf:''}],
+flights:[{no:'출국편',date:'07.26',route:'ICN → CDG',time:'10:05 → 17:20'},{no:'귀국편',date:'07.31',route:'BCN → ICN',time:'20:50 → 16:20+1'}],
+tickets:[{title:'베르사유 궁전',date:'07.28 09:00',note:'A 입구',url:''}],
+shop:[{name:'갤러리 라파예트 오스만',city:'파리',type:'쇼핑몰',addr:'40 Bd Haussmann, 75009 Paris'}],
+transport:[{city:'파리',text:'공항 → 시내: RER B 또는 택시\n지하철은 나비고 이지 충전 이용'}],
+check:[{t:'여권 (유효기간 6개월 이상)',done:false,g:'필수'},{t:'여행자 보험 증명서',done:false,g:'필수'},{t:'항공권 · 호텔 바우처',done:false,g:'필수'},{t:'유로 현금 · 해외 결제 카드',done:false,g:'필수'},{t:'멀티 어댑터 (C타입)',done:false,g:'기타'},{t:'유심 / 이심 / 로밍',done:false,g:'기타'}],
+tips:'소매치기 주의: 가방은 앞으로 메기\n대중교통 티켓 펀칭 확인\n택스리펀은 마지막 EU 공항에서 처리'};
+const SC={hotels:'name:숙소명,city:도시,ci:체크인,co:체크아웃,addr:주소,conf:예약번호',flights:'no:구분,date:날짜,route:구간,time:시간',tickets:'title:이름,date:일시,note:메모,url:티켓 링크',shop:'name:이름,city:도시,type:분류,addr:주소',transport:'city:도시,text:이동 안내',items:'time:시간,title:제목,place:장소 (지도 검색어),note:메모',foods:'name:이름,cat:분류,rate:평점,note:소개'};
+const norm=o=>{const d=structuredClone(sample);for(const k in d)if(o[k]==null)o[k]=d[k];o.days.forEach(x=>{x.foods||=[];x.items||=[]});o.check.forEach(c=>{c.g||='필수'});return o};
+let S=null,ui={edit:false,msg:'',sync:'로컬 저장',ro:false};
+try{S=JSON.parse(localStorage.getItem(KEY))}catch(e){}
+S=norm(S&&Array.isArray(S.days)?S:structuredClone(sample));
+let ref=null,canW=false,timer=0,dirty=false,last='';
+const st=o=>JSON.stringify(o,(k,v)=>v&&typeof v==='object'&&!Array.isArray(v)?Object.fromEntries(Object.entries(v).sort()):v);
+const note=t=>{ui.sync=t;const e=document.getElementById('sy');if(e)e.textContent=t};
+const push=()=>{if(!ref||!canW)return;dirty=true;note('저장 중…');clearTimeout(timer);timer=setTimeout(async()=>{const j=st(S);try{if(j!==last){last=j;await ref.set(JSON.parse(j))}dirty=false;note('동기화됨')}catch(e){dirty=false;note('동기화 실패')}},700)};
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}push()};
+const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const map=q=>'https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(q);
+const get=p=>p.split('.').reduce((o,k)=>o[k],S);
+const set=(p,v)=>{const k=p.split('.'),l=k.pop();k.reduce((o,x)=>o[x],S)[l]=v};
+const W='일월화수목금토',p2=n=>String(n).padStart(2,'0');
+const dt=i=>{const d=new Date(S.start+'T00:00');d.setDate(d.getDate()+i);return d};
+const fy=d=>`${d.getFullYear()}.${p2(d.getMonth()+1)}.${p2(d.getDate())} (${W[d.getDay()]})`;
+const fs=d=>`${p2(d.getMonth()+1)}/${p2(d.getDate())}`;
+const today=()=>new Date(new Date().toDateString());
+const dd=()=>{const n=Math.round((dt(0)-today())/864e5);return n>0?'D-'+n:n>-S.days.length?'여행 '+(1-n)+'일차':'여행 완료'};
+const FL={파리:'🇫🇷',바르셀로나:'🇪🇸',로마:'🇮🇹',런던:'🇬🇧',취리히:'🇨🇭',프라하:'🇨🇿',빈:'🇦🇹',도쿄:'🇯🇵',오사카:'🇯🇵',교토:'🇯🇵'};
+const fl=c=>FL[c]||'📍';
+const groups=()=>{const g=[];S.days.forEach((d,i)=>{const l=g.at(-1);if(l&&l.c===d.city)l.t=i;else g.push({c:d.city,f:i,t:i})});return g};
+const inp=(p,v,ph,t='text')=>`<input data-p="${p}" value="${esc(v)}" placeholder="${ph}" type="${t}">`;
+const ta=(p,v,ph)=>`<textarea data-p="${p}" placeholder="${ph}">${esc(v)}</textarea>`;
+const kv=(l,v)=>v?`<div class="kv"><span>${l}</span><div>${v}</div></div>`:'';
+const mp=(q,t)=>`<a href="${map(q)}" target="_blank" rel="noopener">${esc(t||q)}</a>`;
+const V={
+hotels:o=>`<div class="card"><b>${esc(o.name)}</b><div class="mut">${fl(o.city)} ${esc(o.city)}</div>${kv('체크인',esc(o.ci))}${kv('체크아웃',esc(o.co))}${kv('주소',o.addr&&mp(o.addr))}${kv('예약번호',esc(o.conf))}</div>`,
+flights:o=>`<div class="card"><div class="mut">✈ ${esc(o.no)} · ${esc(o.date)}</div><b class="big">${esc(o.route)}</b><div>${esc(o.time)}</div></div>`,
+tickets:o=>`<div class="card"><b>${esc(o.title)}</b><div class="mut">${esc(o.date)}</div><div class="note">${esc(o.note)}</div>${/^https?:\/\//.test(o.url||'')?`<a href="${esc(o.url)}" target="_blank" rel="noopener">티켓 열기</a>`:''}</div>`,
+shop:o=>`<div class="card"><b>🛍 ${esc(o.name)}</b><div class="mut">${esc(o.city)} · ${esc(o.type)}</div>${o.addr?`<div>${mp(o.addr)}</div>`:''}</div>`,
+transport:o=>`<div class="card"><b>${fl(o.city)} ${esc(o.city)}</b><div class="note" style="color:var(--ink)">${esc(o.text)}</div></div>`,
+items:o=>`<div class="tl"><span class="tm">${esc(o.time)}</span><b>${esc(o.title)}</b> ${o.place?mp(o.place,'지도'):''}<div class="note">${esc(o.note)}</div></div>`,
+foods:o=>`<div class="card"><b>${esc(o.name)}</b><div class="mut">${esc(o.cat)}${o.rate?' · ★'+esc(o.rate):''}</div><div class="note">${esc(o.note)}</div></div>`};
+const form=(path,o,k)=>SC[k].split(',').map(x=>x.split(':')).map(([n,l])=>/^(note|text)$/.test(n)?ta(`${path}.${n}`,o[n],l):inp(`${path}.${n}`,o[n],l)).join('');
+const acts=(path,i)=>`<div class="acts"><button data-a="mv" data-k="${path}" data-i="${i}" data-s="-1">↑</button><button data-a="mv" data-k="${path}" data-i="${i}" data-s="1">↓</button><button class="dng" data-a="del" data-k="${path}" data-i="${i}">삭제</button></div>`;
+const lst=(path,k,cls='grid')=>`<div class="${ui.edit?'':cls}">`+get(path).map((o,i)=>ui.edit?`<div class="card">${form(`${path}.${i}`,o,k)}${acts(path,i)}</div>`:V[k](o)).join('')+`</div>`+(ui.edit?`<button class="add" data-a="add" data-k="${path}" data-t="${k}">+ 추가</button>`:'');
+const sec=(id,en,ko,body)=>`<section id="${id}"><div class="en">${en}</div><h2>${ko}</h2>${body}</section>`;
+const day=(d,i)=>{const p=`days.${i}`;return `<section id="d${i+1}"><div class="en">Day ${i+1} · ${fy(dt(i))}</div><h2>${fl(d.city)} ${ui.edit?'':esc(d.city)}</h2>${ui.edit?inp(p+'.city',d.city,'도시')+`<div class="acts"><button data-a="mvday" data-i="${i}" data-s="-1">↑ Day</button><button data-a="mvday" data-i="${i}" data-s="1">↓ Day</button><button class="dng" data-a="delday" data-i="${i}">Day 삭제</button></div>`:''}${lst(p+'.items','items','')}${d.foods.length||ui.edit?`<h3>추천 맛집 ${d.foods.length}</h3>`+lst(p+'.foods','foods'):''}</section>`};
+const prep=()=>['필수','기타'].map(g=>{const a=S.check.map((c,i)=>[c,i]).filter(([c])=>c.g===g);return `<h3>${g} ${a.length}개</h3><div class="card">`+a.map(([c,i])=>ui.edit?`<div class="row">${inp(`check.${i}.t`,c.t,'준비물')}<select data-p="check.${i}.g"><option ${g==='필수'?'selected':''}>필수</option><option ${g==='기타'?'selected':''}>기타</option></select><button class="dng" data-a="del" data-k="check" data-i="${i}">×</button></div>`:`<label class="ck ${c.done?'done':''}"><input type="checkbox" data-a="chk" data-i="${i}" ${c.done?'checked':''}><span>${esc(c.t)}</span></label>`).join('')+'</div>'}).join('')+(ui.edit?'<button class="add" data-a="addck">+ 준비물 추가</button>':'');
+function render(keep=true){
+  const y=scrollY,N=S.days.length,gp=groups();
+  const A=[['cover','표지'],['overview','여행 개요'],['glance','한눈에 보는 여정'],['tickets','티켓'],['hotels','숙소'],['shop','쇼핑&기념품'],['flights','항공편'],['transport','대중교통']],B=[['prep','준비물'],['tips','팁']];
+  const L=a=>a.map(([i,t])=>`<a href="#${i}">${t}</a>`).join('');
+  const dl=S.days.map((d,i)=>`<a href="#d${i+1}">D${p2(i+1)} ${esc(d.city)}</a>`).join('');
+  const basic=ui.edit?`<section><div class="card"><b>기본 정보</b>${inp('title',S.title,'큰 제목')}${inp('sub',S.sub,'부제')}${inp('kicker',S.kicker,'작은 문구')}${inp('code',S.code,'문서 번호')}<label class="sub">시작일${inp('start',S.start,'','date')}</label>${inp('airline',S.airline,'항공사')}${inp('people',S.people,'여행 인원')}${ta('overview',S.overview,'여행 개요 소개글')}</div></section>`:'';
+  const cover=`<section id="cover" class="cover"><div class="en">Travel Itinerary · ${esc(S.code)}</div><div class="mut">${esc(S.kicker)}</div><h1>${esc(S.title)}</h1><p>${esc(S.sub)}</p><p>${fy(dt(0))} ~ ${fy(dt(N-1))}</p><p>${gp.length}개 도시 (${N-1}박 ${N}일)</p></section>`;
+  const ov=sec('overview','overview','여행 개요',`<p>${esc(S.overview)}</p><div class="grid">${[['총 일정',`${N-1}박 ${N}일`],['방문 도시',`${gp.length}개 도시`],['항공편',S.airline],['여행 인원',S.people]].map(([l,v])=>`<div class="card stat"><span class="mut">${l}</span><b>${esc(v)}</b></div>`).join('')}</div><h3>방문 도시</h3><div class="grid">${gp.map((g,n)=>`<div class="card"><span class="mut">0${n+1}</span> <b>${fl(g.c)} ${esc(g.c)}</b><div class="mut">${fs(dt(g.f))} ~ ${fs(dt(g.t))} · ${g.t-g.f}박 ${g.t-g.f+1}일</div></div>`).join('')}</div>`);
+  const gl=sec('glance','schedule','추천 일정',`<div class="grid">${S.days.map((d,i)=>`<a class="card" style="text-decoration:none;color:inherit" href="#d${i+1}"><b>${i+1}일차 ${fl(d.city)} ${esc(d.city)}</b><div class="mut">${fy(dt(i))}</div><div class="note">${d.items.slice(0,3).map(t=>esc((t.time+' '+t.title).trim())).join('\n')}</div><span style="color:var(--acc)">자세히보기</span></a>`).join('')}</div>`);
+  const admin=ui.edit?`<section id="admin"><div class="en">admin</div><h2>백업 · 불러오기</h2><textarea id="bk" style="min-height:220px;font-size:12px">${esc(JSON.stringify(S,null,1))}</textarea><div class="acts"><button data-a="copy">복사</button><button data-a="load">이 내용으로 불러오기</button><button class="dng" data-a="reset">샘플로 초기화</button></div><p class="sub">${esc(ui.msg)}</p></section>`:'';
+  document.getElementById('app').innerHTML=`<div class="bar"><b>PLANBOOK</b><span class="sub">${dd()} · <span id="sy">${esc(ui.sync)}</span></span><button data-a="today">오늘</button><button data-a="theme">🌓</button><button data-a="share">공유</button>${ui.ro?'':`<button class="${ui.edit?'pri':''}" data-a="edit">${ui.edit?'완료':'관리'}</button>`}</div><aside class="side"><h4>Document</h4>${L(A)}<h4>Day-by-day</h4>${dl}<h4>Reference</h4>${L(B)}</aside><main>${cover}${basic}${ov}${gl}${sec('tickets','tickets','e-티켓',lst('tickets','tickets'))}${sec('hotels','accommodation','숙소',lst('hotels','hotels'))}${sec('shop','shopping','쇼핑&기념품',lst('shop','shop'))}${sec('flights','flights','항공편',lst('flights','flights'))}${sec('transport','transportation','대중교통',lst('transport','transport'))}${S.days.map(day).join('')}${ui.edit?'<section><button class="add" data-a="addday">+ Day 추가</button></section>':''}${sec('prep','checklist','준비물',prep())}${sec('tips','local tips','팁',ui.edit?ta('tips',S.tips,'현지 팁 · 메모'):`<div class="card note" style="color:var(--ink)">${esc(S.tips)}</div>`)}${admin}</main><nav class="bnav">${L(A.slice(0,3))}<a href="#d1">일정</a>${L(A.slice(3))}${L(B)}</nav>`;
+  if(keep)scrollTo(0,y);
+}
+document.addEventListener('click',e=>{
+  const b=e.target.closest('[data-a]');if(!b)return;
+  const a=b.dataset.a,i=+b.dataset.i,k=b.dataset.k,s=+b.dataset.s;let ren=true,sv=true;
+  if(a==='edit')ui.edit=!ui.edit;
+  else if(a==='theme'){const r=document.documentElement;r.dataset.theme=(r.dataset.theme||(matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light'))==='dark'?'light':'dark';ren=sv=false}
+  else if(a==='today'){const n=Math.round((today()-dt(0))/864e5);document.getElementById('d'+(n>=0&&n<S.days.length?n+1:1))?.scrollIntoView();ren=sv=false}
+  else if(a==='share'){ren=sv=false;try{navigator.clipboard.writeText(location.href);note('링크 복사됨')}catch(x){note('주소창의 링크를 복사하세요')}}
+  else if(a==='addday')S.days.push({city:S.days.at(-1)?.city||'',items:[],foods:[]});
+  else if(a==='delday')S.days.splice(i,1);
+  else if(a==='mvday'){const j=i+s;if(j>=0&&j<S.days.length)[S.days[i],S.days[j]]=[S.days[j],S.days[i]]}
+  else if(a==='add')get(k).push(Object.fromEntries(SC[b.dataset.t].split(',').map(x=>[x.split(':')[0],''])));
+  else if(a==='addck')S.check.push({t:'',done:false,g:'필수'});
+  else if(a==='del')get(k).splice(i,1);
+  else if(a==='mv'){const R=get(k),j=i+s;if(j>=0&&j<R.length)[R[i],R[j]]=[R[j],R[i]]}
+  else if(a==='chk')S.check[i].done=b.checked;
+  else if(a==='copy'){const t=document.getElementById('bk');t.select();try{navigator.clipboard.writeText(t.value);ui.msg='복사했습니다.'}catch(x){ui.msg='직접 선택해서 복사하세요.'}}
+  else if(a==='load'){try{const o=JSON.parse(document.getElementById('bk').value);if(!Array.isArray(o.days))throw 0;S=norm(o);ui.msg='불러왔습니다.'}catch(x){ui.msg='형식이 올바르지 않아 불러오지 못했습니다.'}}
+  else if(a==='reset'){S=structuredClone(sample);ui.msg='샘플로 초기화했습니다.'}
+  if(sv)save();if(ren)render();
+});
+document.addEventListener('change',e=>{
+  const p=e.target.dataset.p;if(!p)return;
+  set(p,e.target.value);save();
+  if(/^(title|sub|kicker|code|start|airline|people|overview)$|city|\.g$/.test(p))render();
+});
+render(false);
+(async()=>{
+  if(!window.claude)return;
+  const db=await claude.use('db'),user=await claude.use('user');
+  if(!db)return;
+  canW=user?!!user.canEdit():false;
+  ui.ro=!canW;if(ui.ro)ui.edit=false;
+  ref=db.doc('plan/main');
+  ref.onSnapshot(s=>{
+    if(!s.exists){
+      if(canW){last=st(S);ref.set(JSON.parse(last)).then(()=>note('동기화됨')).catch(()=>note('동기화 실패'))}
+      else note('공유된 플랜이 아직 없습니다');
+      return;
+    }
+    const o=s.data();if(!o||!Array.isArray(o.days)||dirty)return;
+    last=st(o);const n=norm(structuredClone(o));
+    if(st(n)!==st(S)){
+      S=n;try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}
+      if(!/INPUT|TEXTAREA|SELECT/.test(document.activeElement?.tagName||''))render();
+    }
+    note('동기화됨');
+  },()=>note('로컬 저장'));
+  render();
+})();
+</script></body></html>
