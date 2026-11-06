@@ -16,22 +16,9 @@
      "title": "파리 도착 · 호텔 체크인",
      "place": "Paris Charles de Gaulle Airport",
      "note": "공항에서 시내로 이동"
-    },
-    {
-     "time": "19:30",
-     "title": "에펠탑 일몰·야경",
-     "place": "Eiffel Tower",
-     "note": "트로카데로 광장에서 감상"
     }
    ],
-   "foods": [
-    {
-     "name": "Carette",
-     "cat": "파리 · 카페",
-     "rate": "3.9",
-     "note": "샌드위치, 마카롱, 페이스트리로 유명한 곳"
-    }
-   ]
+   "foods": []
   },
   {
    "city": "푸꾸옥",
@@ -41,12 +28,6 @@
      "title": "루브르 박물관 투어",
      "place": "Louvre Museum",
      "note": "미팅 10분 전 도착"
-    },
-    {
-     "time": "14:00",
-     "title": "몽마르트 언덕",
-     "place": "Sacré-Cœur Basilica",
-     "note": "화가의 거리, 사랑해 벽"
     }
    ],
    "foods": []
@@ -58,12 +39,6 @@
      "time": "09:00",
      "title": "베르사유 궁전",
      "place": "Palace of Versailles",
-     "note": ""
-    },
-    {
-     "time": "15:30",
-     "title": "오르세 미술관",
-     "place": "Musée d'Orsay",
      "note": ""
     }
    ],
@@ -77,30 +52,6 @@
      "title": "파리 → 바르셀로나 이동",
      "place": "Paris Orly Airport",
      "note": "출발 2시간 전 도착"
-    },
-    {
-     "time": "19:00",
-     "title": "람블라스 · 보케리아 시장",
-     "place": "La Rambla Barcelona",
-     "note": ""
-    }
-   ],
-   "foods": []
-  },
-  {
-   "city": "바르셀로나",
-   "items": [
-    {
-     "time": "08:30",
-     "title": "가우디 투어",
-     "place": "Casa Milà",
-     "note": ""
-    },
-    {
-     "time": "17:45",
-     "title": "사그라다 파밀리아",
-     "place": "Sagrada Familia",
-     "note": "입장 시간 엄수"
     }
    ],
    "foods": []
