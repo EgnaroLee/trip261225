@@ -2,6 +2,7 @@
 <html lang="ko"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#0f1720">
+<meta name="robots" content="noindex,nofollow">
 <title>플랜북</title>
 <style>
 :root{--bg:#f4f2ec;--card:#fff;--ink:#1b2430;--mut:#6a7380;--line:#e4e0d6;--acc:#a97a2b;--onacc:#fff;--navy:#0f1720;--warn:#b42318;color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
@@ -34,6 +35,7 @@ button{font:inherit;border:1px solid var(--line);background:var(--card);color:va
 input,textarea,select{width:100%;font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:7px 9px;margin:3px 0}
 select{width:auto}textarea{min-height:70px}.row{display:flex;gap:6px;align-items:center}
 input[type=checkbox]{width:auto;margin:5px 0 0}label.ck{display:flex;gap:10px;padding:5px 0}.done span{text-decoration:line-through;color:var(--mut)}
+.mask{position:fixed;inset:0;z-index:20;background:#000a;display:flex;align-items:center;justify-content:center;padding:16px}.dlg{width:100%;max-width:380px;margin:0}
 @media(min-width:960px){.side{display:block;position:fixed;top:46px;left:0;bottom:0;width:232px;overflow:auto;padding:12px 14px;background:var(--card);border-right:1px solid var(--line)}main{padding:0 0 30px 232px}.bnav{display:none}}
 </style></head>
 <body><div id="app"></div>
@@ -54,16 +56,38 @@ shop:[{name:'갤러리 라파예트 오스만',city:'파리',type:'쇼핑몰',ad
 transport:[{city:'파리',text:'공항 → 시내: RER B 또는 택시\n지하철은 나비고 이지 충전 이용'}],
 check:[{t:'여권 (유효기간 6개월 이상)',done:false,g:'필수'},{t:'여행자 보험 증명서',done:false,g:'필수'},{t:'항공권 · 호텔 바우처',done:false,g:'필수'},{t:'유로 현금 · 해외 결제 카드',done:false,g:'필수'},{t:'멀티 어댑터 (C타입)',done:false,g:'기타'},{t:'유심 / 이심 / 로밍',done:false,g:'기타'}],
 tips:'소매치기 주의: 가방은 앞으로 메기\n대중교통 티켓 펀칭 확인\n택스리펀은 마지막 EU 공항에서 처리'};
-const SC={hotels:'name:숙소명,city:도시,ci:체크인,co:체크아웃,addr:주소,conf:예약번호',flights:'no:구분,date:날짜,route:구간,time:시간',tickets:'title:이름,date:일시,note:메모,url:티켓 링크',shop:'name:이름,city:도시,type:분류,addr:주소',transport:'city:도시,text:이동 안내',items:'time:시간,title:제목,place:장소 (지도 검색어),note:메모',foods:'name:이름,cat:분류,rate:평점,note:소개'};
-const norm=o=>{const d=structuredClone(sample);for(const k in d)if(o[k]==null)o[k]=d[k];o.days.forEach(x=>{x.foods||=[];x.items||=[]});o.check.forEach(c=>{c.g||='필수'});return o};
-let S=null,ui={edit:false,msg:'',sync:'로컬 저장',ro:false};
-try{S=JSON.parse(localStorage.getItem(KEY))}catch(e){}
-S=norm(S&&Array.isArray(S.days)?S:structuredClone(sample));
-let ref=null,canW=false,timer=0,dirty=false,last='';
-const st=o=>JSON.stringify(o,(k,v)=>v&&typeof v==='object'&&!Array.isArray(v)?Object.fromEntries(Object.entries(v).sort()):v);
-const note=t=>{ui.sync=t;const e=document.getElementById('sy');if(e)e.textContent=t};
-const push=()=>{if(!ref||!canW)return;dirty=true;note('저장 중…');clearTimeout(timer);timer=setTimeout(async()=>{const j=st(S);try{if(j!==last){last=j;await ref.set(JSON.parse(j))}dirty=false;note('동기화됨')}catch(e){dirty=false;note('동기화 실패')}},700)};
-const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}push()};
+const SC={hotels:'name:숙소명,city:도시,ci:체크인,co:체크아웃,addr:주소',flights:'no:구분,date:날짜,route:구간,time:시간',tickets:'title:이름,date:일시,note:메모,url:티켓 링크',shop:'name:이름,city:도시,type:분류,addr:주소',transport:'city:도시,text:이동 안내',items:'time:시간,title:제목,place:장소 (지도 검색어),note:메모',foods:'name:이름,cat:분류,rate:평점,note:소개'};
+const norm=o=>{const d=structuredClone(sample);for(const k in d)if(o[k]==null)o[k]=d[k];o.days.forEach(x=>{x.foods||=[];x.items||=[]});o.check.forEach(c=>{c.g||='필수'});o.hotels.forEach(h=>{delete h.conf});return o};
+const API='https://planbook-admin.sukzzang0907.workers.dev/',$=id=>document.getElementById(id); // API: Cloudflare Worker 주소를 여기에 입력 (예: https://planbook-admin.내서브도메인.workers.dev)
+let S=norm(structuredClone(sample)),ui={edit:false,msg:'',sync:'',manage:location.hash==='#manage',dlg:null};
+let G=null,last=JSON.stringify(S);
+const note=t=>{ui.sync=t;const e=$('sy');if(e)e.textContent=t};
+const call=async(op,data)=>{
+  if(!API)throw new Error('관리 서버 주소(API)가 아직 설정되지 않았습니다');
+  const r=await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({op,pw:G.pw,data})});
+  const j=await r.json().catch(()=>({}));
+  if(!r.ok)throw new Error(j.error==='pw'?'비밀번호가 올바르지 않습니다':'서버 오류 ('+(j.error||r.status)+')');
+  return j;
+};
+async function loadLatest(){const j=await call('get');if(j.data&&Array.isArray(j.data.days)){S=norm(j.data);last=JSON.stringify(S)}}
+async function commit(){
+  note('GitHub 저장 중…');const snap=JSON.stringify(S);
+  try{await call('put',S);last=snap;note('커밋됨 · 사이트 반영까지 최대 10분')}catch(e){note('저장 실패: '+e.message)}
+}
+const save=()=>{if(G&&ui.edit&&JSON.stringify(S)!==last)note('저장 안 됨 · 완료를 누르면 GitHub에 저장됩니다')};
+async function finish(){
+  if(G&&JSON.stringify(S)!==last)await commit();
+  if(!G||JSON.stringify(S)===last)ui.edit=false;
+  render();
+}
+addEventListener('beforeunload',e=>{if(G&&ui.edit&&JSON.stringify(S)!==last){e.preventDefault();e.returnValue=''}});
+async function unlock(){
+  G={pw:$('pw').value};
+  try{await loadLatest();ui.dlg=null;ui.edit=true;ui.msg='';render()}
+  catch(e){G=null;ui.msg=e.message;render()}
+}
+document.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.id==='pw')unlock()});
+const dlg=()=>!ui.dlg?'':`<div class="mask"><div class="card dlg"><b>관리자 비밀번호</b><input id="pw" type="password" placeholder="비밀번호" autocomplete="off"><div class="acts"><button class="pri" data-a="unlock">확인</button><button data-a="cancel">취소</button></div><p class="sub">${esc(ui.msg)}</p></div></div>`;
 const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const map=q=>'https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(q);
 const get=p=>p.split('.').reduce((o,k)=>o[k],S);
@@ -82,7 +106,7 @@ const ta=(p,v,ph)=>`<textarea data-p="${p}" placeholder="${ph}">${esc(v)}</texta
 const kv=(l,v)=>v?`<div class="kv"><span>${l}</span><div>${v}</div></div>`:'';
 const mp=(q,t)=>`<a href="${map(q)}" target="_blank" rel="noopener">${esc(t||q)}</a>`;
 const V={
-hotels:o=>`<div class="card"><b>${esc(o.name)}</b><div class="mut">${fl(o.city)} ${esc(o.city)}</div>${kv('체크인',esc(o.ci))}${kv('체크아웃',esc(o.co))}${kv('주소',o.addr&&mp(o.addr))}${kv('예약번호',esc(o.conf))}</div>`,
+hotels:o=>`<div class="card"><b>${esc(o.name)}</b><div class="mut">${fl(o.city)} ${esc(o.city)}</div>${kv('체크인',esc(o.ci))}${kv('체크아웃',esc(o.co))}${kv('주소',o.addr&&mp(o.addr))}</div>`,
 flights:o=>`<div class="card"><div class="mut">✈ ${esc(o.no)} · ${esc(o.date)}</div><b class="big">${esc(o.route)}</b><div>${esc(o.time)}</div></div>`,
 tickets:o=>`<div class="card"><b>${esc(o.title)}</b><div class="mut">${esc(o.date)}</div><div class="note">${esc(o.note)}</div>${/^https?:\/\//.test(o.url||'')?`<a href="${esc(o.url)}" target="_blank" rel="noopener">티켓 열기</a>`:''}</div>`,
 shop:o=>`<div class="card"><b>🛍 ${esc(o.name)}</b><div class="mut">${esc(o.city)} · ${esc(o.type)}</div>${o.addr?`<div>${mp(o.addr)}</div>`:''}</div>`,
@@ -105,13 +129,15 @@ function render(keep=true){
   const ov=sec('overview','overview','여행 개요',`<p>${esc(S.overview)}</p><div class="grid">${[['총 일정',`${N-1}박 ${N}일`],['방문 도시',`${gp.length}개 도시`],['항공편',S.airline],['여행 인원',S.people]].map(([l,v])=>`<div class="card stat"><span class="mut">${l}</span><b>${esc(v)}</b></div>`).join('')}</div><h3>방문 도시</h3><div class="grid">${gp.map((g,n)=>`<div class="card"><span class="mut">0${n+1}</span> <b>${fl(g.c)} ${esc(g.c)}</b><div class="mut">${fs(dt(g.f))} ~ ${fs(dt(g.t))} · ${g.t-g.f}박 ${g.t-g.f+1}일</div></div>`).join('')}</div>`);
   const gl=sec('glance','schedule','추천 일정',`<div class="grid">${S.days.map((d,i)=>`<a class="card" style="text-decoration:none;color:inherit" href="#d${i+1}"><b>${i+1}일차 ${fl(d.city)} ${esc(d.city)}</b><div class="mut">${fy(dt(i))}</div><div class="note">${d.items.slice(0,3).map(t=>esc((t.time+' '+t.title).trim())).join('\n')}</div><span style="color:var(--acc)">자세히보기</span></a>`).join('')}</div>`);
   const admin=ui.edit?`<section id="admin"><div class="en">admin</div><h2>백업 · 불러오기</h2><textarea id="bk" style="min-height:220px;font-size:12px">${esc(JSON.stringify(S,null,1))}</textarea><div class="acts"><button data-a="copy">복사</button><button data-a="load">이 내용으로 불러오기</button><button class="dng" data-a="reset">샘플로 초기화</button></div><p class="sub">${esc(ui.msg)}</p></section>`:'';
-  document.getElementById('app').innerHTML=`<div class="bar"><b>PLANBOOK</b><span class="sub">${dd()} · <span id="sy">${esc(ui.sync)}</span></span><button data-a="today">오늘</button><button data-a="theme">🌓</button><button data-a="share">공유</button>${ui.ro?'':`<button class="${ui.edit?'pri':''}" data-a="edit">${ui.edit?'완료':'관리'}</button>`}</div><aside class="side"><h4>Document</h4>${L(A)}<h4>Day-by-day</h4>${dl}<h4>Reference</h4>${L(B)}</aside><main>${cover}${basic}${ov}${gl}${sec('tickets','tickets','e-티켓',lst('tickets','tickets'))}${sec('hotels','accommodation','숙소',lst('hotels','hotels'))}${sec('shop','shopping','쇼핑&기념품',lst('shop','shop'))}${sec('flights','flights','항공편',lst('flights','flights'))}${sec('transport','transportation','대중교통',lst('transport','transport'))}${S.days.map(day).join('')}${ui.edit?'<section><button class="add" data-a="addday">+ Day 추가</button></section>':''}${sec('prep','checklist','준비물',prep())}${sec('tips','local tips','팁',ui.edit?ta('tips',S.tips,'현지 팁 · 메모'):`<div class="card note" style="color:var(--ink)">${esc(S.tips)}</div>`)}${admin}</main><nav class="bnav">${L(A.slice(0,3))}<a href="#d1">일정</a>${L(A.slice(3))}${L(B)}</nav>`;
+  document.getElementById('app').innerHTML=`<div class="bar"><b>PLANBOOK</b><span class="sub">${dd()} <span id="sy">${esc(ui.sync)}</span></span><button data-a="today">오늘</button><button data-a="theme">🌓</button><button data-a="share">공유</button><button class="${ui.edit?'pri':''}" data-a="edit">${ui.edit?'완료':'관리'}</button></div><aside class="side"><h4>Document</h4>${L(A)}<h4>Day-by-day</h4>${dl}<h4>Reference</h4>${L(B)}</aside><main>${cover}${basic}${ov}${gl}${sec('tickets','tickets','e-티켓',lst('tickets','tickets'))}${sec('hotels','accommodation','숙소',lst('hotels','hotels'))}${sec('shop','shopping','쇼핑&기념품',lst('shop','shop'))}${sec('flights','flights','항공편',lst('flights','flights'))}${sec('transport','transportation','대중교통',lst('transport','transport'))}${S.days.map(day).join('')}${ui.edit?'<section><button class="add" data-a="addday">+ Day 추가</button></section>':''}${sec('prep','checklist','준비물',prep())}${sec('tips','local tips','팁',ui.edit?ta('tips',S.tips,'현지 팁 · 메모'):`<div class="card note" style="color:var(--ink)">${esc(S.tips)}</div>`)}${admin}</main>${dlg()}<nav class="bnav">${L(A.slice(0,3))}<a href="#d1">일정</a>${L(A.slice(3))}${L(B)}</nav>`;
   if(keep)scrollTo(0,y);
 }
 document.addEventListener('click',e=>{
   const b=e.target.closest('[data-a]');if(!b)return;
   const a=b.dataset.a,i=+b.dataset.i,k=b.dataset.k,s=+b.dataset.s;let ren=true,sv=true;
-  if(a==='edit')ui.edit=!ui.edit;
+  if(a==='edit'){if(ui.edit){ren=sv=false;finish()}else if(G)ui.edit=true;else ui.dlg='unlock'}
+  else if(a==='unlock'){ren=sv=false;unlock()}
+  else if(a==='cancel'){ui.dlg=null;ui.msg=''}
   else if(a==='theme'){const r=document.documentElement;r.dataset.theme=(r.dataset.theme||(matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light'))==='dark'?'light':'dark';ren=sv=false}
   else if(a==='today'){const n=Math.round((today()-dt(0))/864e5);document.getElementById('d'+(n>=0&&n<S.days.length?n+1:1))?.scrollIntoView();ren=sv=false}
   else if(a==='share'){ren=sv=false;try{navigator.clipboard.writeText(location.href);note('링크 복사됨')}catch(x){note('주소창의 링크를 복사하세요')}}
@@ -134,27 +160,6 @@ document.addEventListener('change',e=>{
   if(/^(title|sub|kicker|code|start|airline|people|overview)$|city|\.g$/.test(p))render();
 });
 render(false);
-(async()=>{
-  if(!window.claude)return;
-  const db=await claude.use('db'),user=await claude.use('user');
-  if(!db)return;
-  canW=user?!!user.canEdit():false;
-  ui.ro=!canW;if(ui.ro)ui.edit=false;
-  ref=db.doc('plan/main');
-  ref.onSnapshot(s=>{
-    if(!s.exists){
-      if(canW){last=st(S);ref.set(JSON.parse(last)).then(()=>note('동기화됨')).catch(()=>note('동기화 실패'))}
-      else note('공유된 플랜이 아직 없습니다');
-      return;
-    }
-    const o=s.data();if(!o||!Array.isArray(o.days)||dirty)return;
-    last=st(o);const n=norm(structuredClone(o));
-    if(st(n)!==st(S)){
-      S=n;try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}
-      if(!/INPUT|TEXTAREA|SELECT/.test(document.activeElement?.tagName||''))render();
-    }
-    note('동기화됨');
-  },()=>note('로컬 저장'));
-  render();
-})();
+addEventListener('hashchange',()=>{const m=location.hash==='#manage';if(m!==ui.manage){ui.manage=m;render()}});
+fetch('data.json?'+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.json():null).then(o=>{if(o&&Array.isArray(o.days)&&!ui.edit){S=norm(o);last=JSON.stringify(S);render()}}).catch(()=>{});
 </script></body></html>
