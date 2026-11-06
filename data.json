@@ -1,0 +1,194 @@
+{
+ "title": "프랑스부터 스페인까지,",
+ "sub": "여행자님을 위한 플랜북",
+ "kicker": "make your own europe",
+ "code": "PB-0001",
+ "start": "2026-12-25",
+ "airline": "아시아나항공",
+ "people": "총 2명",
+ "overview": "직접 만들고 고치는 나만의 여행 플랜북입니다. 관리 버튼을 눌러 일정, 숙소, 티켓, 맛집을 자유롭게 수정하세요.",
+ "days": [
+  {
+   "city": "파리",
+   "items": [
+    {
+     "time": "17:20",
+     "title": "파리 도착 · 호텔 체크인",
+     "place": "Paris Charles de Gaulle Airport",
+     "note": "공항에서 시내로 이동"
+    },
+    {
+     "time": "19:30",
+     "title": "에펠탑 일몰·야경",
+     "place": "Eiffel Tower",
+     "note": "트로카데로 광장에서 감상"
+    }
+   ],
+   "foods": [
+    {
+     "name": "Carette",
+     "cat": "파리 · 카페",
+     "rate": "3.9",
+     "note": "샌드위치, 마카롱, 페이스트리로 유명한 곳"
+    }
+   ]
+  },
+  {
+   "city": "파리",
+   "items": [
+    {
+     "time": "08:50",
+     "title": "루브르 박물관 투어",
+     "place": "Louvre Museum",
+     "note": "미팅 10분 전 도착"
+    },
+    {
+     "time": "14:00",
+     "title": "몽마르트 언덕",
+     "place": "Sacré-Cœur Basilica",
+     "note": "화가의 거리, 사랑해 벽"
+    }
+   ],
+   "foods": []
+  },
+  {
+   "city": "파리",
+   "items": [
+    {
+     "time": "09:00",
+     "title": "베르사유 궁전",
+     "place": "Palace of Versailles",
+     "note": ""
+    },
+    {
+     "time": "15:30",
+     "title": "오르세 미술관",
+     "place": "Musée d'Orsay",
+     "note": ""
+    }
+   ],
+   "foods": []
+  },
+  {
+   "city": "바르셀로나",
+   "items": [
+    {
+     "time": "14:15",
+     "title": "파리 → 바르셀로나 이동",
+     "place": "Paris Orly Airport",
+     "note": "출발 2시간 전 도착"
+    },
+    {
+     "time": "19:00",
+     "title": "람블라스 · 보케리아 시장",
+     "place": "La Rambla Barcelona",
+     "note": ""
+    }
+   ],
+   "foods": []
+  },
+  {
+   "city": "바르셀로나",
+   "items": [
+    {
+     "time": "08:30",
+     "title": "가우디 투어",
+     "place": "Casa Milà",
+     "note": ""
+    },
+    {
+     "time": "17:45",
+     "title": "사그라다 파밀리아",
+     "place": "Sagrada Familia",
+     "note": "입장 시간 엄수"
+    }
+   ],
+   "foods": []
+  }
+ ],
+ "hotels": [
+  {
+   "name": "파리 호텔 (예시)",
+   "city": "파리",
+   "ci": "07.26 14:00",
+   "co": "07.29 12:00",
+   "addr": ""
+  },
+  {
+   "name": "바르셀로나 호텔 (예시)",
+   "city": "바르셀로나",
+   "ci": "07.29 15:00",
+   "co": "07.31 12:00",
+   "addr": ""
+  }
+ ],
+ "flights": [
+  {
+   "no": "출국편",
+   "date": "07.26",
+   "route": "ICN → CDG",
+   "time": "10:05 → 17:20"
+  },
+  {
+   "no": "귀국편",
+   "date": "07.31",
+   "route": "BCN → ICN",
+   "time": "20:50 → 16:20+1"
+  }
+ ],
+ "tickets": [
+  {
+   "title": "베르사유 궁전",
+   "date": "07.28 09:00",
+   "note": "A 입구",
+   "url": ""
+  }
+ ],
+ "shop": [
+  {
+   "name": "갤러리 라파예트 오스만",
+   "city": "파리",
+   "type": "쇼핑몰",
+   "addr": "40 Bd Haussmann, 75009 Paris"
+  }
+ ],
+ "transport": [
+  {
+   "city": "파리",
+   "text": "공항 → 시내: RER B 또는 택시\n지하철은 나비고 이지 충전 이용"
+  }
+ ],
+ "check": [
+  {
+   "t": "여권 (유효기간 6개월 이상)",
+   "done": false,
+   "g": "필수"
+  },
+  {
+   "t": "여행자 보험 증명서",
+   "done": false,
+   "g": "필수"
+  },
+  {
+   "t": "항공권 · 호텔 바우처",
+   "done": false,
+   "g": "필수"
+  },
+  {
+   "t": "유로 현금 · 해외 결제 카드",
+   "done": false,
+   "g": "필수"
+  },
+  {
+   "t": "멀티 어댑터 (C타입)",
+   "done": false,
+   "g": "기타"
+  },
+  {
+   "t": "유심 / 이심 / 로밍",
+   "done": false,
+   "g": "기타"
+  }
+ ],
+ "tips": "소매치기 주의: 가방은 앞으로 메기\n대중교통 티켓 펀칭 확인\n택스리펀은 마지막 EU 공항에서 처리"
+}
