@@ -1,15 +1,15 @@
 {
- "title": "프랑스부터 스페인까지,",
- "sub": "여행자님을 위한 플랜북",
- "kicker": "make your own europe",
+ "title": "🧡푸꾸옥 여행🧡",
+ "sub": "현석이가 만드는 플랜북",
+ "kicker": "orange's travel planbook",
  "code": "PB-0001",
  "start": "2026-12-25",
- "airline": "아시아나항공",
- "people": "총 2명",
- "overview": "직접 만들고 고치는 나만의 여행 플랜북입니다. 관리 버튼을 눌러 일정, 숙소, 티켓, 맛집을 자유롭게 수정하세요.",
+ "airline": "에어아시아",
+ "people": "총 5명",
+ "overview": "수정사항 제안 필요",
  "days": [
   {
-   "city": "파리",
+   "city": "푸꾸옥",
    "items": [
     {
      "time": "17:20",
@@ -34,7 +34,7 @@
    ]
   },
   {
-   "city": "파리",
+   "city": "푸꾸옥",
    "items": [
     {
      "time": "08:50",
@@ -52,7 +52,7 @@
    "foods": []
   },
   {
-   "city": "파리",
+   "city": "푸꾸옥",
    "items": [
     {
      "time": "09:00",
@@ -70,7 +70,7 @@
    "foods": []
   },
   {
-   "city": "바르셀로나",
+   "city": "푸꾸옥",
    "items": [
     {
      "time": "14:15",
