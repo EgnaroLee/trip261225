@@ -1,16 +1,63 @@
 {
- "title": "",
- "sub": "",
+ "title": "푸꾸옥 여행 플랜북",
+ "sub": "처갓댁과 함께하는 첫 해외여행!",
  "kicker": "",
- "code": "",
- "start": "",
- "airline": "",
- "overview": "",
- "tpl": 0,
- "cover": "",
- "days": [],
- "hotels": [],
- "flights": [],
+ "code": "PB-0001",
+ "start": "2026-12-25",
+ "airline": "비엣젯항공",
+ "overview": "현석이랑 유리랑 장모님이랑 장인어른이랑 처제랑 간다! 푸꾸옥!",
+ "tpl": 4,
+ "cover": "https://lh3.googleusercontent.com/grass-cs/AABkmLeuyZzwpK4s_befl6VFBLnHOQFtWH0mEvvcQAb4Nmhf8AWqeTMJHrpBgnFrXGsIPGdaFdVRBbzwKvngROrcrGq_f8udB1tEt0xd5kKkiRNs7vi0Ojqbr1WP44r902XxQVlUdU1S=w326-h312-n-k-no",
+ "days": [
+  {
+   "city": "푸꾸옥",
+   "items": [],
+   "foods": [],
+   "img": "",
+   "flag": "🇻🇳"
+  },
+  {
+   "city": "푸꾸옥",
+   "items": [],
+   "foods": [],
+   "img": ""
+  },
+  {
+   "city": "푸꾸옥",
+   "items": [],
+   "foods": [],
+   "img": ""
+  },
+  {
+   "city": "푸꾸옥",
+   "items": [],
+   "foods": [],
+   "img": ""
+  }
+ ],
+ "hotels": [
+  {
+   "name": "뉴월드 푸꾸옥 리조트",
+   "city": "베트남 푸꾸옥",
+   "ci": "12/25",
+   "co": "12/28",
+   "addr": "Khem Beach, Phú Quốc, An Giang 92513 베트남"
+  }
+ ],
+ "flights": [
+  {
+   "no": "출국편",
+   "date": "2026/12/25",
+   "route": "ICN → PQC",
+   "time": "05:00 → 08:50"
+  },
+  {
+   "no": "귀국편",
+   "date": "2026/12/28",
+   "route": "PQC → ICN",
+   "time": "18:05 → 01:20 +1"
+  }
+ ],
  "tickets": [],
  "shop": [],
  "transport": [],
