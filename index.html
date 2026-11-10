@@ -19,8 +19,8 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .bnav{position:fixed;left:0;right:0;bottom:0;z-index:9;display:flex;overflow-x:auto;background:var(--navy);padding:6px 8px calc(6px + env(safe-area-inset-bottom,0px))}
 .bnav a{flex:none;color:#cfd6df;text-decoration:none;font-size:12px;padding:6px 10px}
 main{padding-bottom:64px}section{max-width:860px;margin:0 auto;padding:28px 16px}
-.cover{max-width:none;background:linear-gradient(160deg,#0f1720,#1f3047);color:#fff;text-align:center;padding:64px 20px}
-.cover h1{font:700 clamp(28px,6vw,44px)/1.25 Georgia,"Noto Serif KR",serif;margin:14px 0 6px}.cover p{margin:4px 0;color:#d5dbe3}.cover .en{color:#d9a94f}
+.cover{max-width:none;position:relative;background:linear-gradient(160deg,var(--navy),color-mix(in srgb,var(--navy),#fff 14%)) center/cover;color:#fff;text-align:center;padding:64px 20px}.cover.img::before{content:"";position:absolute;inset:0;background:rgba(8,12,18,.55)}.cover>*{position:relative}
+.cover h1{font:700 clamp(28px,6vw,44px)/1.25 Georgia,"Noto Serif KR",serif;margin:14px 0 6px}.cover p{margin:4px 0;color:#d5dbe3}.cover .en{color:rgba(255,255,255,.75)}
 .en{color:var(--acc);font-size:12px;letter-spacing:.14em;text-transform:uppercase}h2{font-size:26px;margin:4px 0 14px}h3{margin:18px 0 8px;font-size:16px}
 .mut,.sub{color:var(--mut);font-size:13px}.big{font-size:20px;display:block}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:10px}
@@ -35,6 +35,7 @@ button{font:inherit;border:1px solid var(--line);background:var(--card);color:va
 input,textarea,select{width:100%;font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:7px 9px;margin:3px 0}
 select{width:auto}textarea{min-height:70px}.row{display:flex;gap:6px;align-items:center}
 input[type=checkbox]{width:auto;margin:5px 0 0}label.ck{display:flex;gap:10px;padding:5px 0}.done span{text-decoration:line-through;color:var(--mut)}
+.dimg{height:150px;border-radius:14px;background:var(--line) center/cover;margin-bottom:12px}.sbox{position:sticky;top:calc(env(safe-area-inset-top,0px) + 46px);z-index:8;background:var(--card);border-bottom:1px solid var(--line);padding:8px 12px}.sbox a{display:block;padding:6px 4px;font-size:14px;text-decoration:none}.sw{display:inline-block;width:14px;height:14px;border-radius:50%;vertical-align:-2px}input[type=color]{height:38px;padding:2px}
 .mask{position:fixed;inset:0;z-index:20;background:#000a;display:flex;align-items:center;justify-content:center;padding:16px}.dlg{width:100%;max-width:380px;margin:0}
 @media(min-width:960px){.side{display:block;position:fixed;top:46px;left:0;bottom:0;width:232px;overflow:auto;padding:12px 14px;background:var(--card);border-right:1px solid var(--line)}main{padding:0 0 30px 232px}.bnav{display:none}}
 </style></head>
@@ -56,8 +57,12 @@ shop:[{name:'갤러리 라파예트 오스만',city:'파리',type:'쇼핑몰',ad
 transport:[{city:'파리',text:'공항 → 시내: RER B 또는 택시\n지하철은 나비고 이지 충전 이용'}],
 check:[{t:'여권 (유효기간 6개월 이상)',done:false,g:'필수'},{t:'여행자 보험 증명서',done:false,g:'필수'},{t:'항공권 · 호텔 바우처',done:false,g:'필수'},{t:'유로 현금 · 해외 결제 카드',done:false,g:'필수'},{t:'멀티 어댑터 (C타입)',done:false,g:'기타'},{t:'유심 / 이심 / 로밍',done:false,g:'기타'}],
 tips:'소매치기 주의: 가방은 앞으로 메기\n대중교통 티켓 펀칭 확인\n택스리펀은 마지막 EU 공항에서 처리'};
+const DEF=['overview','glance','flights','hotels','days','tickets','transport','shop','prep','tips'];
+const LB={overview:'여행 개요',glance:'추천 일정',flights:'항공편',hotels:'숙소',days:'Day 상세',tickets:'e-티켓',transport:'대중교통',shop:'쇼핑&기념품',prep:'준비물',tips:'팁'};
+const PR=[['기본','#a97a2b','#0f1720'],['청록','#0f766e','#0b2a2e'],['와인','#be3455','#2a0f1a'],['올리브','#6b8e23','#1d2a14'],['인디고','#6366f1','#14163a'],['코랄','#e0624d','#2b1612']];
+Object.assign(sample,{order:DEF.slice(),hide:[],acc:'#a97a2b',navy:'#0f1720',cover:''});
 const SC={hotels:'name:숙소명,city:도시,ci:체크인,co:체크아웃,addr:주소',flights:'no:구분,date:날짜,route:구간,time:시간',tickets:'title:이름,date:일시,note:메모,url:티켓 링크',shop:'name:이름,city:도시,type:분류,addr:주소',transport:'city:도시,text:이동 안내',items:'time:시간,title:제목,place:장소 (지도 검색어),note:메모',foods:'name:이름,cat:분류,rate:평점,note:소개'};
-const norm=o=>{const d=structuredClone(sample);for(const k in d)if(o[k]==null)o[k]=d[k];o.days.forEach(x=>{x.foods||=[];x.items||=[]});o.check.forEach(c=>{c.g||='필수'});o.hotels.forEach(h=>{delete h.conf});return o};
+const norm=o=>{const d=structuredClone(sample);for(const k in d)if(o[k]==null)o[k]=d[k];o.days.forEach(x=>{x.foods||=[];x.items||=[];x.img||=''});const od=Array.isArray(o.order)?o.order.filter(k=>DEF.includes(k)):[];o.order=[...od,...DEF.filter(k=>!od.includes(k))];o.hide=Array.isArray(o.hide)?o.hide:[];if(!/^#[0-9a-f]{6}$/i.test(o.acc))o.acc='#a97a2b';if(!/^#[0-9a-f]{6}$/i.test(o.navy))o.navy='#0f1720';o.cover||='';o.check.forEach(c=>{c.g||='필수'});o.hotels.forEach(h=>{delete h.conf});return o};
 const API='https://planbook-admin.sukzzang0907.workers.dev/',$=id=>document.getElementById(id); // API: Cloudflare Worker 주소를 여기에 입력 (예: https://planbook-admin.내서브도메인.workers.dev)
 let S=norm(structuredClone(sample)),ui={edit:false,msg:'',sync:'',manage:location.hash==='#manage',dlg:null};
 let G=null,last=JSON.stringify(S);
@@ -86,6 +91,7 @@ async function unlock(){
   try{await loadLatest();ui.dlg=null;ui.edit=true;ui.msg='';render()}
   catch(e){G=null;ui.msg=e.message;render()}
 }
+document.addEventListener('input',e=>{if(e.target.id==='q')showQ(e.target.value)});
 document.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.id==='pw')unlock()});
 const dlg=()=>!ui.dlg?'':`<div class="mask"><div class="card dlg"><b>관리자 비밀번호</b><input id="pw" type="password" placeholder="비밀번호" autocomplete="off"><div class="acts"><button class="pri" data-a="unlock">확인</button><button data-a="cancel">취소</button></div><p class="sub">${esc(ui.msg)}</p></div></div>`;
 const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
@@ -117,19 +123,36 @@ const form=(path,o,k)=>SC[k].split(',').map(x=>x.split(':')).map(([n,l])=>/^(not
 const acts=(path,i)=>`<div class="acts"><button data-a="mv" data-k="${path}" data-i="${i}" data-s="-1">↑</button><button data-a="mv" data-k="${path}" data-i="${i}" data-s="1">↓</button><button class="dng" data-a="del" data-k="${path}" data-i="${i}">삭제</button></div>`;
 const lst=(path,k,cls='grid')=>`<div class="${ui.edit?'':cls}">`+get(path).map((o,i)=>ui.edit?`<div class="card">${form(`${path}.${i}`,o,k)}${acts(path,i)}</div>`:V[k](o)).join('')+`</div>`+(ui.edit?`<button class="add" data-a="add" data-k="${path}" data-t="${k}">+ 추가</button>`:'');
 const sec=(id,en,ko,body)=>`<section id="${id}"><div class="en">${en}</div><h2>${ko}</h2>${body}</section>`;
-const day=(d,i)=>{const p=`days.${i}`;return `<section id="d${i+1}"><div class="en">Day ${i+1} · ${fy(dt(i))}</div><h2>${fl(d.city)} ${ui.edit?'':esc(d.city)}</h2>${ui.edit?inp(p+'.city',d.city,'도시')+`<div class="acts"><button data-a="mvday" data-i="${i}" data-s="-1">↑ Day</button><button data-a="mvday" data-i="${i}" data-s="1">↓ Day</button><button class="dng" data-a="delday" data-i="${i}">Day 삭제</button></div>`:''}${lst(p+'.items','items','')}${d.foods.length||ui.edit?`<h3>추천 맛집 ${d.foods.length}</h3>`+lst(p+'.foods','foods'):''}</section>`};
+const day=(d,i)=>{const p=`days.${i}`;return `<section id="d${i+1}"><div class="en">Day ${i+1} · ${fy(dt(i))}</div><h2>${fl(d.city)} ${ui.edit?'':esc(d.city)}</h2>${ui.edit?inp(p+'.city',d.city,'도시')+`<div class="acts"><button data-a="mvday" data-i="${i}" data-s="-1">↑ Day</button><button data-a="mvday" data-i="${i}" data-s="1">↓ Day</button><button class="dng" data-a="delday" data-i="${i}">Day 삭제</button></div>`:''}${ui.edit?inp(p+'.img',d.img,'Day 대표 이미지 주소 (https://…)'):isU(d.img)?`<div class="dimg" data-bg="${esc(d.img)}"></div>`:''}${lst(p+'.items','items','')}${d.foods.length||ui.edit?`<h3>추천 맛집 ${d.foods.length}</h3>`+lst(p+'.foods','foods'):''}</section>`};
 const prep=()=>['필수','기타'].map(g=>{const a=S.check.map((c,i)=>[c,i]).filter(([c])=>c.g===g);return `<h3>${g} ${a.length}개</h3><div class="card">`+a.map(([c,i])=>ui.edit?`<div class="row">${inp(`check.${i}.t`,c.t,'준비물')}<select data-p="check.${i}.g"><option ${g==='필수'?'selected':''}>필수</option><option ${g==='기타'?'selected':''}>기타</option></select><button class="dng" data-a="del" data-k="check" data-i="${i}">×</button></div>`:`<label class="ck ${c.done?'done':''}"><input type="checkbox" data-a="chk" data-i="${i}" ${c.done?'checked':''}><span>${esc(c.t)}</span></label>`).join('')+'</div>'}).join('')+(ui.edit?'<button class="add" data-a="addck">+ 준비물 추가</button>':'');
+const lum=h=>{const n=parseInt(h.slice(1),16);return(.299*(n>>16)+.587*((n>>8)&255)+.114*(n&255))/255};
+function theme(){const r=document.documentElement.style;r.setProperty('--acc',S.acc);r.setProperty('--navy',S.navy);r.setProperty('--onacc',lum(S.acc)>.6?'#111':'#fff')}
+const isU=u=>/^https?:\/\//.test(u||'');
+function showQ(v){v=v.trim().toLowerCase();const R=[];
+  if(v){S.days.forEach((d,i)=>{if(d.city.toLowerCase().includes(v))R.push(['#d'+(i+1),`Day ${i+1} · ${d.city}`]);
+    d.items.forEach(t=>{if((t.title+t.place+t.note).toLowerCase().includes(v))R.push(['#d'+(i+1),`Day ${i+1} · ${t.time} ${t.title}`])});
+    d.foods.forEach(f=>{if((f.name+f.cat+f.note).toLowerCase().includes(v))R.push(['#d'+(i+1),`Day ${i+1} · 🍽 ${f.name}`])})});
+    [['hotels','name','🏨'],['tickets','title','🎫'],['shop','name','🛍']].forEach(([k,f,ic])=>S[k].forEach(o=>{if(JSON.stringify(o).toLowerCase().includes(v))R.push(['#'+k,`${ic} ${o[f]}`])}))}
+  $('qr').innerHTML=v?(R.slice(0,20).map(([h,t])=>`<a href="${h}">${esc(t)}</a>`).join('')||'<p class="sub">검색 결과가 없습니다</p>'):'';
+}
 function render(keep=true){
   const y=scrollY,N=S.days.length,gp=groups();
-  const A=[['cover','표지'],['overview','여행 개요'],['glance','한눈에 보는 여정'],['tickets','티켓'],['hotels','숙소'],['shop','쇼핑&기념품'],['flights','항공편'],['transport','대중교통']],B=[['prep','준비물'],['tips','팁']];
-  const L=a=>a.map(([i,t])=>`<a href="#${i}">${t}</a>`).join('');
   const dl=S.days.map((d,i)=>`<a href="#d${i+1}">D${p2(i+1)} ${esc(d.city)}</a>`).join('');
-  const basic=ui.edit?`<section><div class="card"><b>기본 정보</b>${inp('title',S.title,'큰 제목')}${inp('sub',S.sub,'부제')}${inp('kicker',S.kicker,'작은 문구')}${inp('code',S.code,'문서 번호')}<label class="sub">시작일${inp('start',S.start,'','date')}</label>${inp('airline',S.airline,'항공사')}${inp('people',S.people,'여행 인원')}${ta('overview',S.overview,'여행 개요 소개글')}</div></section>`:'';
-  const cover=`<section id="cover" class="cover"><div class="en">Travel Itinerary · ${esc(S.code)}</div><div class="mut">${esc(S.kicker)}</div><h1>${esc(S.title)}</h1><p>${esc(S.sub)}</p><p>${fy(dt(0))} ~ ${fy(dt(N-1))}</p><p>${gp.length}개 도시 (${N-1}박 ${N}일)</p></section>`;
+  const vis=S.order.filter(k=>ui.edit||!S.hide.includes(k));
+  const side=vis.map(k=>k==='days'?`<h4>Day-by-day</h4>${dl}<h4>More</h4>`:`<a href="#${k}">${LB[k]}</a>`).join('');
+  const bn=vis.map(k=>`<a href="#${k==='days'?'d1':k}">${k==='days'?'일정':LB[k]}</a>`).join('');
+  const THEME=`<div class="card"><b>색 테마</b><div class="row" style="flex-wrap:wrap;margin:6px 0">${PR.map(([n,c],i)=>`<button data-a="preset" data-i="${i}"><span class="sw" style="background:${c}"></span> ${n}</button>`).join('')}</div><label class="sub">포인트 색${inp('acc',S.acc,'','color')}</label><label class="sub">표지·상단 색${inp('navy',S.navy,'','color')}</label></div>`;
+  const ORD=`<div class="card"><b>섹션 순서 · 표시</b>${S.order.map((k,i)=>`<div class="row"><span style="flex:1">${LB[k]}</span><button data-a="smv" data-i="${i}" data-s="-1">↑</button><button data-a="smv" data-i="${i}" data-s="1">↓</button><label class="ck"><input type="checkbox" data-a="shide" data-k="${k}" ${S.hide.includes(k)?'':'checked'}>표시</label></div>`).join('')}</div>`;
+  const basic=ui.edit?`<section><div class="card"><b>기본 정보</b>${inp('title',S.title,'큰 제목')}${inp('sub',S.sub,'부제')}${inp('kicker',S.kicker,'작은 문구')}${inp('code',S.code,'문서 번호')}<label class="sub">시작일${inp('start',S.start,'','date')}</label>${inp('airline',S.airline,'항공사')}${inp('people',S.people,'여행 인원')}${inp('cover',S.cover,'표지 배경 이미지 주소 (https://…)')}${ta('overview',S.overview,'여행 개요 소개글')}</div>${THEME}${ORD}</section>`:'';
+  const cover=`<section id="cover" class="cover${isU(S.cover)?' img':''}"${isU(S.cover)?` data-bg="${esc(S.cover)}"`:''}><div class="en">Travel Itinerary · ${esc(S.code)}</div><div class="mut">${esc(S.kicker)}</div><h1>${esc(S.title)}</h1><p>${esc(S.sub)}</p><p>${fy(dt(0))} ~ ${fy(dt(N-1))}</p><p>${gp.length}개 도시 (${N-1}박 ${N}일)</p></section>`;
   const ov=sec('overview','overview','여행 개요',`<p>${esc(S.overview)}</p><div class="grid">${[['총 일정',`${N-1}박 ${N}일`],['방문 도시',`${gp.length}개 도시`],['항공편',S.airline],['여행 인원',S.people]].map(([l,v])=>`<div class="card stat"><span class="mut">${l}</span><b>${esc(v)}</b></div>`).join('')}</div><h3>방문 도시</h3><div class="grid">${gp.map((g,n)=>`<div class="card"><span class="mut">0${n+1}</span> <b>${fl(g.c)} ${esc(g.c)}</b><div class="mut">${fs(dt(g.f))} ~ ${fs(dt(g.t))} · ${g.t-g.f}박 ${g.t-g.f+1}일</div></div>`).join('')}</div>`);
   const gl=sec('glance','schedule','추천 일정',`<div class="grid">${S.days.map((d,i)=>`<a class="card" style="text-decoration:none;color:inherit" href="#d${i+1}"><b>${i+1}일차 ${fl(d.city)} ${esc(d.city)}</b><div class="mut">${fy(dt(i))}</div><div class="note">${d.items.slice(0,3).map(t=>esc((t.time+' '+t.title).trim())).join('\n')}</div><span style="color:var(--acc)">자세히보기</span></a>`).join('')}</div>`);
   const admin=ui.edit?`<section id="admin"><div class="en">admin</div><h2>백업 · 불러오기</h2><textarea id="bk" style="min-height:220px;font-size:12px">${esc(JSON.stringify(S,null,1))}</textarea><div class="acts"><button data-a="copy">복사</button><button data-a="load">이 내용으로 불러오기</button><button class="dng" data-a="reset">샘플로 초기화</button></div><p class="sub">${esc(ui.msg)}</p></section>`:'';
-  document.getElementById('app').innerHTML=`<div class="bar"><b>PLANBOOK</b><span class="sub">${dd()} <span id="sy">${esc(ui.sync)}</span></span><button data-a="today">오늘</button><button data-a="theme">🌓</button><button data-a="share">공유</button><button class="${ui.edit?'pri':''}" data-a="edit">${ui.edit?'완료':'관리'}</button></div><aside class="side"><h4>Document</h4>${L(A)}<h4>Day-by-day</h4>${dl}<h4>Reference</h4>${L(B)}</aside><main>${cover}${basic}${ov}${gl}${sec('tickets','tickets','e-티켓',lst('tickets','tickets'))}${sec('hotels','accommodation','숙소',lst('hotels','hotels'))}${sec('shop','shopping','쇼핑&기념품',lst('shop','shop'))}${sec('flights','flights','항공편',lst('flights','flights'))}${sec('transport','transportation','대중교통',lst('transport','transport'))}${S.days.map(day).join('')}${ui.edit?'<section><button class="add" data-a="addday">+ Day 추가</button></section>':''}${sec('prep','checklist','준비물',prep())}${sec('tips','local tips','팁',ui.edit?ta('tips',S.tips,'현지 팁 · 메모'):`<div class="card note" style="color:var(--ink)">${esc(S.tips)}</div>`)}${admin}</main>${dlg()}<nav class="bnav">${L(A.slice(0,3))}<a href="#d1">일정</a>${L(A.slice(3))}${L(B)}</nav>`;
+  const BL={overview:ov,glance:gl,flights:sec('flights','flights','항공편',lst('flights','flights')),hotels:sec('hotels','accommodation','숙소',lst('hotels','hotels')),tickets:sec('tickets','tickets','e-티켓',lst('tickets','tickets')),transport:sec('transport','transportation','대중교통',lst('transport','transport')),shop:sec('shop','shopping','쇼핑&기념품',lst('shop','shop')),days:S.days.map(day).join('')+(ui.edit?'<section><button class="add" data-a="addday">+ Day 추가</button></section>':''),prep:sec('prep','checklist','준비물',prep()),tips:sec('tips','local tips','팁',ui.edit?ta('tips',S.tips,'현지 팁 · 메모'):`<div class="card note" style="color:var(--ink)">${esc(S.tips)}</div>`)};
+  const blocks=vis.map(k=>BL[k]).join('');
+  theme();
+  document.getElementById('app').innerHTML=`<div class="bar"><b>PLANBOOK</b><span class="sub">${dd()} <span id="sy">${esc(ui.sync)}</span></span><button data-a="search">🔍</button><button data-a="today">오늘</button><button data-a="theme">🌓</button><button data-a="share">공유</button><button class="${ui.edit?'pri':''}" data-a="edit">${ui.edit?'완료':'관리'}</button></div>${ui.sq?'<div class="sbox"><input id="q" placeholder="장소·일정·맛집 검색" autocomplete="off"><div id="qr"></div></div>':''}<aside class="side"><h4>Document</h4><a href="#cover">표지</a>${side}</aside><main>${cover}${basic}${blocks}${admin}</main>${dlg()}<nav class="bnav"><a href="#cover">표지</a>${bn}</nav>`;
+  document.querySelectorAll('[data-bg]').forEach(e=>{e.style.backgroundImage=`url("${e.dataset.bg.replace(/"/g,'%22')}")`});
   if(keep)scrollTo(0,y);
 }
 document.addEventListener('click',e=>{
@@ -138,6 +161,10 @@ document.addEventListener('click',e=>{
   if(a==='edit'){if(ui.edit){ren=sv=false;finish()}else if(G)ui.edit=true;else ui.dlg='unlock'}
   else if(a==='unlock'){ren=sv=false;unlock()}
   else if(a==='cancel'){ui.dlg=null;ui.msg=''}
+  else if(a==='search'){ren=sv=false;ui.sq=!ui.sq;render();if(ui.sq)$('q')?.focus()}
+  else if(a==='preset'){S.acc=PR[i][1];S.navy=PR[i][2]}
+  else if(a==='smv'){const j=i+s;if(j>=0&&j<S.order.length)[S.order[i],S.order[j]]=[S.order[j],S.order[i]]}
+  else if(a==='shide'){S.hide=S.hide.includes(k)?S.hide.filter(x=>x!==k):[...S.hide,k]}
   else if(a==='theme'){const r=document.documentElement;r.dataset.theme=(r.dataset.theme||(matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light'))==='dark'?'light':'dark';ren=sv=false}
   else if(a==='today'){const n=Math.round((today()-dt(0))/864e5);document.getElementById('d'+(n>=0&&n<S.days.length?n+1:1))?.scrollIntoView();ren=sv=false}
   else if(a==='share'){ren=sv=false;try{navigator.clipboard.writeText(location.href);note('링크 복사됨')}catch(x){note('주소창의 링크를 복사하세요')}}
@@ -157,9 +184,10 @@ document.addEventListener('click',e=>{
 document.addEventListener('change',e=>{
   const p=e.target.dataset.p;if(!p)return;
   set(p,e.target.value);save();
-  if(/^(title|sub|kicker|code|start|airline|people|overview)$|city|\.g$/.test(p))render();
+  if(/^(title|sub|kicker|code|start|airline|people|overview)$|city|\.g$|^(acc|navy|cover)$|\.img$/.test(p))render();
 });
 render(false);
+if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
 addEventListener('hashchange',()=>{const m=location.hash==='#manage';if(m!==ui.manage){ui.manage=m;render()}});
 fetch('data.json?'+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.json():null).then(o=>{if(o&&Array.isArray(o.days)&&!ui.edit){S=norm(o);last=JSON.stringify(S);render()}}).catch(()=>{});
 </script></body></html>
