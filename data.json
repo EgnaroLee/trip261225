@@ -1,127 +1,24 @@
 {
- "title": "🧡푸꾸옥 여행🧡",
- "sub": "현석이가 만드는 플랜북",
- "kicker": "orange's travel planbook",
- "code": "PB-0001",
- "start": "2026-12-25",
- "airline": "에어아시아",
- "people": "총 5명",
- "overview": "수정사항 제안 필요",
- "days": [
-  {
-   "city": "푸꾸옥",
-   "items": [
-    {
-     "time": "17:20",
-     "title": "파리 도착 · 호텔 체크인",
-     "place": "Paris Charles de Gaulle Airport",
-     "note": "공항에서 시내로 이동"
-    }
-   ],
-   "foods": [],
-   "img": ""
-  },
-  {
-   "city": "푸꾸옥",
-   "items": [
-    {
-     "time": "08:50",
-     "title": "루브르 박물관 투어",
-     "place": "Louvre Museum",
-     "note": "미팅 10분 전 도착"
-    }
-   ],
-   "foods": [],
-   "img": ""
-  },
-  {
-   "city": "푸꾸옥",
-   "items": [
-    {
-     "time": "09:00",
-     "title": "베르사유 궁전",
-     "place": "Palace of Versailles",
-     "note": ""
-    }
-   ],
-   "foods": [],
-   "img": ""
-  },
-  {
-   "city": "푸꾸옥",
-   "items": [
-    {
-     "time": "14:15",
-     "title": "파리 → 바르셀로나 이동",
-     "place": "Paris Orly Airport",
-     "note": "출발 2시간 전 도착"
-    }
-   ],
-   "foods": [],
-   "img": ""
-  }
- ],
- "hotels": [
-  {
-   "name": "뉴월드 푸꾸옥 리조트",
-   "city": "푸꾸옥",
-   "ci": "12.25",
-   "co": "12.28",
-   "addr": "뉴월드리조트 푸꾸옥 베트남 92513 An Giang, Phú Quốc"
-  }
- ],
- "flights": [
-  {
-   "no": "출국편",
-   "date": "12.25",
-   "route": "ICN → PQC",
-   "time": "05:00 → 08:50"
-  },
-  {
-   "no": "귀국편",
-   "date": "12.28",
-   "route": "PQC → ICN",
-   "time": "18:05 → 01:20+1"
-  }
- ],
+ "title": "",
+ "sub": "",
+ "kicker": "",
+ "code": "",
+ "start": "",
+ "airline": "",
+ "overview": "",
+ "tpl": 0,
+ "cover": "",
+ "days": [],
+ "hotels": [],
+ "flights": [],
  "tickets": [],
  "shop": [],
  "transport": [],
- "check": [
-  {
-   "t": "여권 (유효기간 6개월 이상)",
-   "done": false,
-   "g": "필수"
-  },
-  {
-   "t": "여행자 보험 증명서",
-   "done": false,
-   "g": "필수"
-  },
-  {
-   "t": "항공권 · 호텔 바우처",
-   "done": false,
-   "g": "필수"
-  },
-  {
-   "t": "유로 현금 · 해외 결제 카드",
-   "done": false,
-   "g": "필수"
-  },
-  {
-   "t": "멀티 어댑터 (C타입)",
-   "done": false,
-   "g": "기타"
-  },
-  {
-   "t": "유심 / 이심 / 로밍",
-   "done": false,
-   "g": "기타"
-  }
- ],
- "tips": "소매치기 주의: 가방은 앞으로 메기\n대중교통 티켓 펀칭 확인\n택스리펀은 마지막 EU 공항에서 처리",
+ "check": [],
+ "tips": "",
  "order": [
   "overview",
+  "map",
   "glance",
   "flights",
   "hotels",
@@ -132,8 +29,5 @@
   "prep",
   "tips"
  ],
- "hide": [],
- "acc": "#a27aff",
- "navy": "#5cb0ff",
- "cover": ""
+ "hide": []
 }
