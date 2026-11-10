@@ -11,7 +11,14 @@
  "days": [
   {
    "city": "푸꾸옥",
-   "items": [],
+   "items": [
+    {
+     "time": "",
+     "title": "",
+     "place": "",
+     "note": ""
+    }
+   ],
    "foods": [],
    "img": "",
    "flag": "🇻🇳"
