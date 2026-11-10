@@ -56,10 +56,11 @@ select{width:auto}textarea{min-height:70px}.row{display:flex;gap:6px;align-items
 input[type=checkbox]{width:auto;margin:5px 0 0}label.ck{display:flex;gap:10px;padding:5px 0}.done span{text-decoration:line-through;color:var(--mut)}
 .dimg{height:150px;border-radius:var(--r);background:var(--line) center/cover;margin-bottom:12px}
 .chips{display:flex;gap:6px;overflow-x:auto;padding-bottom:8px}.chip{flex:none;border-radius:999px;font-size:13px;padding:5px 12px}.chip.on{background:var(--acc);color:var(--onacc);border-color:var(--acc)}
-#map{position:relative;z-index:0;height:380px;border-radius:var(--r);border:1px solid var(--line);margin-bottom:8px}
+#mapbox{position:relative;z-index:0;height:380px;border-radius:var(--r);border:1px solid var(--line);margin-bottom:8px}
 .mk{width:24px;height:24px;border-radius:50%;color:#fff;font:700 12px/20px system-ui;text-align:center;border:2px solid #fff;box-shadow:0 1px 4px #0006}
 .hd{cursor:grab;font-size:20px;padding:0 6px;user-select:none}.dz{border:2px dashed var(--line);border-radius:var(--r);padding:10px;text-align:center;color:var(--mut);font-size:13px;margin-bottom:8px}.over{outline:2px solid var(--acc)}.dragging{opacity:.4}
 .sbox{position:sticky;top:calc(env(safe-area-inset-top,0px) + 46px);z-index:8;background:var(--card);border-bottom:1px solid var(--line);padding:8px 12px}.sbox a{display:block;padding:6px 4px;font-size:14px;text-decoration:none}
+.fg{height:1em;width:1.33em;vertical-align:-.12em;border-radius:2px;box-shadow:0 0 0 1px #0003;object-fit:cover}
 .load{text-align:center;padding:90px 16px;color:var(--mut)}
 .mask{position:fixed;inset:0;z-index:20;background:#000a;display:flex;align-items:center;justify-content:center;padding:16px}.dlg{width:100%;max-width:380px;margin:0}
 @media(min-width:960px){.side{display:block;position:fixed;top:46px;left:0;bottom:0;width:232px;overflow:auto;padding:12px 14px;background:var(--card);border-right:1px solid var(--line)}main{padding:0 0 30px 232px}.bnav{display:none}}
@@ -76,7 +77,8 @@ const PAL=['#e4572e','#17bebb','#e0a800','#76b041','#8e6bbf','#f28482','#3a86ff'
 const SC={hotels:'name:숙소명,city:도시,ci:체크인,co:체크아웃,addr:주소',flights:'no:구분,date:날짜,route:구간 (예: ICN → CDG),time:시간',tickets:'title:이름,date:일시,note:메모,url:티켓 링크',shop:'name:이름,city:도시,type:분류,addr:주소',transport:'city:도시,text:이동 안내',items:'time:시간,title:제목,place:장소 (지도 검색어),note:메모',foods:'name:이름,cat:분류,rate:평점,note:소개'};
 const FLS='🇰🇷 서울 부산 제주 한국;🇯🇵 도쿄 오사카 교토 후쿠오카 삿포로 오키나와 나고야 일본;🇹🇭 방콕 치앙마이 푸켓 파타야 태국;🇻🇳 하노이 다낭 호치민 푸꾸옥 나트랑 달랏 베트남;🇸🇬 싱가포르;🇲🇾 쿠알라룸푸르 코타키나발루 말레이시아;🇵🇭 세부 마닐라 보라카이 필리핀;🇮🇩 발리 자카르타 인도네시아;🇭🇰 홍콩;🇲🇴 마카오;🇹🇼 타이베이 타이페이 대만;🇨🇳 상하이 베이징 중국;🇫🇷 파리 니스 리옹 마르세유 스트라스부르 프랑스;🇪🇸 바르셀로나 마드리드 세비야 그라나다 발렌시아 스페인;🇮🇹 로마 밀라노 베네치아 피렌체 나폴리 이탈리아;🇬🇧 런던 에딘버러 영국;🇮🇪 더블린;🇳🇱 암스테르담 네덜란드;🇧🇪 브뤼셀 벨기에;🇩🇪 베를린 뮌헨 프랑크푸르트 독일;🇨🇭 취리히 인터라켄 루체른 제네바 스위스;🇦🇹 빈 잘츠부르크 할슈타트 오스트리아;🇨🇿 프라하 체코;🇭🇺 부다페스트 헝가리;🇵🇱 바르샤바 크라쿠프 폴란드;🇵🇹 리스본 포르투 포르투갈;🇬🇷 아테네 산토리니 그리스;🇹🇷 이스탄불 튀르키예 터키;🇦🇪 두바이 아부다비;🇩🇰 코펜하겐;🇸🇪 스톡홀름;🇳🇴 오슬로;🇫🇮 헬싱키;🇮🇸 레이캬비크 아이슬란드;🇭🇷 두브로브니크 자그레브 크로아티아;🇺🇸 뉴욕 로스앤젤레스 LA 샌프란시스코 라스베이거스 하와이 호놀룰루 시애틀 미국;🇨🇦 밴쿠버 토론토 캐나다;🇦🇺 시드니 멜버른 호주;🇳🇿 오클랜드 퀸스타운 뉴질랜드;🇬🇺 괌;🇲🇵 사이판;🇪🇬 카이로 이집트;🇲🇦 마라케시 모로코;🇿🇦 케이프타운;🇲🇽 멕시코시티 칸쿤 멕시코;🇧🇷 리우 브라질;🇲🇻 몰디브;🇮🇳 델리 인도;🇳🇵 카트만두 네팔;🇲🇳 울란바토르 몽골;🇷🇺 모스크바 블라디보스토크 러시아';
 const FM={};FLS.split(';').forEach(g=>{const [f,...k]=g.split(' ');k.forEach(x=>FM[x]=f)});
-const fl=(c,d)=>{if(d&&d.flag)return d.flag;c=c||'';for(const k in FM)if(c.includes(k))return FM[k];return '📍'};
+const ccOf=f=>{const a=[...f];return a.length===2&&a.every(x=>{const n=x.codePointAt(0);return n>=0x1F1E6&&n<=0x1F1FF})?a.map(x=>String.fromCharCode(x.codePointAt(0)-0x1F1E6+97)).join(''):/^[A-Za-z]{2}$/.test(f)?f.toLowerCase():''};
+const fl=(c,d)=>{let f=d&&d.flag?d.flag:'';if(!f){c=c||'';for(const k in FM)if(c.includes(k)){f=FM[k];break}}if(!f)return '📍';const cc=ccOf(f);return cc?`<img class="fg" alt="${cc.toUpperCase()}" src="https://cdn.jsdelivr.net/npm/flag-icons@7.2.3/flags/4x3/${cc}.svg">`:esc(f)};
 const blank=()=>({title:'',sub:'',kicker:'',code:'',start:'',airline:'',overview:'',tpl:0,cover:'',days:[],hotels:[],flights:[],tickets:[],shop:[],transport:[],check:[],tips:'',order:DEF.slice(),hide:[]});
 const norm=o=>{const d=blank();for(const k in d)if(o[k]==null)o[k]=d[k];
   o.days.forEach(x=>{x.foods||=[];x.items||=[];x.img||=''});
@@ -153,9 +155,9 @@ function moveItem(d1,i1,d2,i2){const [it]=S.days[d1].items.splice(i1,1);if(d1===
 const CDN='https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/';
 const lf=()=>window.L?Promise.resolve():new Promise((ok,no)=>{if(!$('lfc')){const l=document.createElement('link');l.id='lfc';l.rel='stylesheet';l.href=CDN+'leaflet.css';document.head.appendChild(l)}const s=document.createElement('script');s.src=CDN+'leaflet.js';s.onload=ok;s.onerror=no;document.head.appendChild(s)});
 async function initMap(){
-  const el=$('map');if(!el)return;
+  const el=$('mapbox');if(!el)return;
   try{await lf()}catch(e){el.innerHTML='<p class="sub" style="padding:16px">지도를 불러오지 못했습니다. 인터넷 연결을 확인하세요.</p>';return}
-  if(!$('map'))return;
+  if(!$('mapbox'))return;
   try{M&&M.remove()}catch(e){}
   M=L.map(el,{scrollWheelZoom:false}).setView([25,10],2);
   L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'© OpenStreetMap'}).addTo(M);
@@ -201,7 +203,7 @@ function render(keep=true){
   const nm=S.days.reduce((a,d)=>a+d.items.filter(t=>t.lat!=null).length,0),mm=S.days.reduce((a,d)=>a+d.items.filter(t=>t.place).length,0);
   const BL={
    overview:sec('overview',`${S.overview?`<p>${esc(S.overview)}</p>`:''}<div class="grid">${[['총 일정',N?`${N-1}박 ${N}일`:'-'],['방문 도시',`${gp.length}개 도시`],['항공편',S.airline||'-']].map(([l,v])=>`<div class="card stat"><span class="mut">${l}</span><b>${esc(v)}</b></div>`).join('')}</div>${gp.length?`<h3>방문 도시</h3><div class="grid">${gp.map((g,n)=>`<div class="card"><span class="mut">0${n+1}</span> <b>${fl(g.c,S.days[g.f])} ${esc(g.c)}</b><div class="mut">${fs(dt(g.f))} ~ ${fs(dt(g.t))} · ${g.t-g.f}박 ${g.t-g.f+1}일</div></div>`).join('')}</div>`:''}`),
-   map:sec('map',`<div class="chips"><button class="chip ${ui.mapDay<0?'on':''}" data-a="mday" data-i="-1">전체</button>${S.days.map((d,i)=>`<button class="chip" data-a="mday" data-i="${i}" style="border-color:${PAL[i%8]};${ui.mapDay===i?`background:${PAL[i%8]};color:#fff`:''}">D${i+1}</button>`).join('')}</div><div id="map"></div>${ui.edit?`<p class="sub">위치 확인 ${nm}/${mm}곳 · 장소를 새로 입력했다면 아래 버튼으로 지도 위치를 불러오세요.</p><button data-a="geo">📍 장소 위치 불러오기</button>`:'<p class="sub">번호는 Day별 일정 순서입니다. 마커를 누르면 상세가 보여요.</p>'}`),
+   map:sec('map',`<div class="chips"><button class="chip ${ui.mapDay<0?'on':''}" data-a="mday" data-i="-1">전체</button>${S.days.map((d,i)=>`<button class="chip" data-a="mday" data-i="${i}" style="border-color:${PAL[i%8]};${ui.mapDay===i?`background:${PAL[i%8]};color:#fff`:''}">D${i+1}</button>`).join('')}</div><div id="mapbox"></div>${ui.edit?`<p class="sub">위치 확인 ${nm}/${mm}곳 · 장소를 새로 입력했다면 아래 버튼으로 지도 위치를 불러오세요.</p><button data-a="geo">📍 장소 위치 불러오기</button>`:'<p class="sub">번호는 Day별 일정 순서입니다. 마커를 누르면 상세가 보여요.</p>'}`),
    glance:sec('glance',`<div class="grid">${S.days.map((d,i)=>`<a class="card" style="text-decoration:none;color:inherit" href="#d${i+1}"><b>${i+1}일차 ${fl(d.city,d)} ${esc(d.city)}</b><div class="mut">${dtx(i)}</div><div class="note">${d.items.slice(0,3).map(t=>esc((t.time+' '+t.title).trim())).join('\n')}</div><span style="color:var(--acc)">자세히보기</span></a>`).join('')}</div>`),
    flights:sec('flights',lst('flights','flights')),hotels:sec('hotels',lst('hotels','hotels')),tickets:sec('tickets',lst('tickets','tickets')),
    transport:sec('transport',lst('transport','transport')),shop:sec('shop',lst('shop','shop')),
@@ -212,7 +214,7 @@ function render(keep=true){
   $('app').innerHTML=bar+(ui.sq?'<div class="sbox"><input id="q" placeholder="장소·일정·맛집 검색" autocomplete="off"><div id="qr"></div></div>':'')+`<aside class="side"><h4>Document</h4><a href="#cover">🛫 표지</a>${side}</aside><main>${cover}${none}${basic}${vis.map(k=>BL[k]).join('')}${admin}</main>${dlg()}<nav class="bnav"><a href="#cover">🛫 표지</a>${bn}</nav>`;
   document.querySelectorAll('[data-bg]').forEach(e=>{e.style.backgroundImage=`url("${e.dataset.bg.replace(/"/g,'%22')}")`});
   if(keep)scrollTo(0,y);
-  if($('map'))initMap();
+  if($('mapbox'))initMap();
 }
 document.addEventListener('click',e=>{
   const b=e.target.closest('[data-a]');if(!b)return;
