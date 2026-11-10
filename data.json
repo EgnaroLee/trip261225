@@ -7,37 +7,65 @@
  "airline": "비엣젯항공",
  "overview": "현석이랑 유리랑 장모님이랑 장인어른이랑 처제랑 간다! 푸꾸옥!",
  "tpl": 4,
- "cover": "https://lh3.googleusercontent.com/grass-cs/AABkmLeuyZzwpK4s_befl6VFBLnHOQFtWH0mEvvcQAb4Nmhf8AWqeTMJHrpBgnFrXGsIPGdaFdVRBbzwKvngROrcrGq_f8udB1tEt0xd5kKkiRNs7vi0Ojqbr1WP44r902XxQVlUdU1S=w326-h312-n-k-no",
+ "cover": "",
  "days": [
   {
    "city": "푸꾸옥",
    "items": [
     {
-     "time": "",
-     "title": "",
-     "place": "",
+     "time": "05:00",
+     "title": "출국",
+     "place": "인천국제공항",
      "note": ""
     }
    ],
-   "foods": [],
+   "foods": [
+    {
+     "name": "맛집1",
+     "cat": "한식",
+     "rate": "☆☆☆☆☆",
+     "note": "굳"
+    }
+   ],
    "img": "",
    "flag": "🇻🇳"
   },
   {
    "city": "푸꾸옥",
-   "items": [],
+   "items": [
+    {
+     "time": "08:00",
+     "title": "마사징",
+     "place": "장소",
+     "note": ""
+    }
+   ],
    "foods": [],
    "img": ""
   },
   {
    "city": "푸꾸옥",
-   "items": [],
+   "items": [
+    {
+     "time": "06:00",
+     "title": "일정",
+     "place": "장소",
+     "note": "메모"
+    }
+   ],
    "foods": [],
    "img": ""
   },
   {
    "city": "푸꾸옥",
-   "items": [],
+   "items": [
+    {
+     "time": "18:05",
+     "title": "귀국",
+     "place": "푸꾸옥공항",
+     "note": ""
+    }
+   ],
    "foods": [],
    "img": ""
   }
@@ -65,11 +93,41 @@
    "time": "18:05 → 01:20 +1"
   }
  ],
- "tickets": [],
- "shop": [],
- "transport": [],
- "check": [],
- "tips": "",
+ "tickets": [
+  {
+   "title": "숙소",
+   "date": "12/25 ~ 12/28",
+   "note": "",
+   "url": ""
+  }
+ ],
+ "shop": [
+  {
+   "name": "이름",
+   "city": "도시",
+   "type": "분류",
+   "addr": "주소"
+  }
+ ],
+ "transport": [
+  {
+   "city": "툭툭이",
+   "text": "이동안내"
+  }
+ ],
+ "check": [
+  {
+   "t": "컵라면",
+   "done": false,
+   "g": "기타"
+  },
+  {
+   "t": "여권",
+   "done": false,
+   "g": "필수"
+  }
+ ],
+ "tips": "현지 팁, 메모\n재밌게놀고 오자!",
  "order": [
   "overview",
   "map",
