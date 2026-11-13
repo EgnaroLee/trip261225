@@ -54,6 +54,7 @@ button{font:inherit;border:1px solid var(--line);background:var(--card);color:va
 input,textarea,select{width:100%;font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:7px 9px;margin:3px 0}
 select{width:auto}textarea{min-height:70px}.row{display:flex;gap:6px;align-items:center}input[type=color]{height:38px;padding:2px}
 input[type=checkbox]{width:auto;margin:5px 0 0}label.ck{display:flex;gap:10px;padding:5px 0}.done span{text-decoration:line-through;color:var(--mut)}
+.tp{display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin:4px 0}.tp .sub{flex:0 0 100%}.tp select,.tp input{width:auto}
 .dimg{height:150px;border-radius:var(--r);background:var(--line) center/cover;margin-bottom:12px}
 .chips{display:flex;gap:6px;overflow-x:auto;padding-bottom:8px}.chip{flex:none;border-radius:999px;font-size:13px;padding:5px 12px}.chip.on{background:var(--acc);color:var(--onacc);border-color:var(--acc)}
 #mapbox{position:relative;z-index:0;height:380px;border-radius:var(--r);border:1px solid var(--line);margin-bottom:8px}
@@ -74,7 +75,7 @@ const LB={overview:'여행 개요',map:'통합 지도',glance:'추천 일정',fl
 const EN={overview:'overview',map:'map',glance:'schedule',flights:'flights',hotels:'accommodation',tickets:'tickets',transport:'transportation',shop:'shopping',prep:'checklist',tips:'local tips'};
 const TP=['✈️ 보딩패스','🛫 공항 전광판','🧳 빈티지 캐리어','🗼 파리 감성','🌊 지중해','🌴 트로피컬','🌃 도쿄 네온','⛰️ 북유럽','🏜️ 사파리','📮 에어메일'];
 const PAL=['#e4572e','#17bebb','#e0a800','#76b041','#8e6bbf','#f28482','#3a86ff','#fb8500'];
-const SC={hotels:'name:숙소명,city:도시,ci:체크인,co:체크아웃,addr:주소',flights:'no:구분,date:날짜,route:구간 (예: ICN → CDG),time:시간',tickets:'title:이름,date:일시,note:메모,url:티켓 링크',shop:'name:이름,city:도시,type:분류,addr:주소',transport:'city:도시,text:이동 안내',items:'time:시간,title:제목,place:장소 (지도 검색어),note:메모',foods:'name:이름,cat:분류,rate:평점,note:소개'};
+const SC={hotels:'name:숙소명,city:도시,ci:체크인:dt,co:체크아웃:dt,addr:주소',flights:'no:구분,date:날짜:d,route:구간 (예: ICN → CDG),dep:출발 시각:t,arr:도착 시각:t,plus:도착일:p',tickets:'title:이름,date:일시:dt,note:메모,url:티켓 링크',shop:'name:이름,city:도시,type:분류,addr:주소',transport:'city:도시,text:이동 안내',items:'time:시간:t,title:제목,place:장소 (지도 검색어),note:메모',foods:'name:이름,cat:분류,rate:평점,note:소개'};
 const FLS='🇰🇷 서울 부산 제주 한국;🇯🇵 도쿄 오사카 교토 후쿠오카 삿포로 오키나와 나고야 일본;🇹🇭 방콕 치앙마이 푸켓 파타야 태국;🇻🇳 하노이 다낭 호치민 푸꾸옥 나트랑 달랏 베트남;🇸🇬 싱가포르;🇲🇾 쿠알라룸푸르 코타키나발루 말레이시아;🇵🇭 세부 마닐라 보라카이 필리핀;🇮🇩 발리 자카르타 인도네시아;🇭🇰 홍콩;🇲🇴 마카오;🇹🇼 타이베이 타이페이 대만;🇨🇳 상하이 베이징 중국;🇫🇷 파리 니스 리옹 마르세유 스트라스부르 프랑스;🇪🇸 바르셀로나 마드리드 세비야 그라나다 발렌시아 스페인;🇮🇹 로마 밀라노 베네치아 피렌체 나폴리 이탈리아;🇬🇧 런던 에딘버러 영국;🇮🇪 더블린;🇳🇱 암스테르담 네덜란드;🇧🇪 브뤼셀 벨기에;🇩🇪 베를린 뮌헨 프랑크푸르트 독일;🇨🇭 취리히 인터라켄 루체른 제네바 스위스;🇦🇹 빈 잘츠부르크 할슈타트 오스트리아;🇨🇿 프라하 체코;🇭🇺 부다페스트 헝가리;🇵🇱 바르샤바 크라쿠프 폴란드;🇵🇹 리스본 포르투 포르투갈;🇬🇷 아테네 산토리니 그리스;🇹🇷 이스탄불 튀르키예 터키;🇦🇪 두바이 아부다비;🇩🇰 코펜하겐;🇸🇪 스톡홀름;🇳🇴 오슬로;🇫🇮 헬싱키;🇮🇸 레이캬비크 아이슬란드;🇭🇷 두브로브니크 자그레브 크로아티아;🇺🇸 뉴욕 로스앤젤레스 LA 샌프란시스코 라스베이거스 하와이 호놀룰루 시애틀 미국;🇨🇦 밴쿠버 토론토 캐나다;🇦🇺 시드니 멜버른 호주;🇳🇿 오클랜드 퀸스타운 뉴질랜드;🇬🇺 괌;🇲🇵 사이판;🇪🇬 카이로 이집트;🇲🇦 마라케시 모로코;🇿🇦 케이프타운;🇲🇽 멕시코시티 칸쿤 멕시코;🇧🇷 리우 브라질;🇲🇻 몰디브;🇮🇳 델리 인도;🇳🇵 카트만두 네팔;🇲🇳 울란바토르 몽골;🇷🇺 모스크바 블라디보스토크 러시아';
 const FM={};FLS.split(';').forEach(g=>{const [f,...k]=g.split(' ');k.forEach(x=>FM[x]=f)});
 const ccOf=f=>{const a=[...f];return a.length===2&&a.every(x=>{const n=x.codePointAt(0);return n>=0x1F1E6&&n<=0x1F1FF})?a.map(x=>String.fromCharCode(x.codePointAt(0)-0x1F1E6+97)).join(''):/^[A-Za-z]{2}$/.test(f)?f.toLowerCase():''};
@@ -133,21 +134,29 @@ const ta=(p,v,ph)=>`<textarea data-p="${p}" placeholder="${ph}">${esc(v)}</texta
 const kv=(l,v)=>v?`<div class="kv"><span>${l}</span><div>${v}</div></div>`:'';
 const mp=(q,t)=>`<a href="${mapQ(q)}" target="_blank" rel="noopener">${esc(t||q)}</a>`;
 const rt=r=>{const p=String(r||'').split(/→|->|–|—/).map(x=>x.trim()).filter(Boolean);return p.length===2?`<div class="route"><b>${esc(p[0])}</b><i></i><b>${esc(p[1])}</b></div>`:`<b>${esc(r)}</b>`};
+const HH=[...Array(24).keys()].map(p2),MM=[...Array(12).keys()].map(i=>p2(i*5));
+const sel=(c,o,cur,ph)=>`<select class="${c}"><option value="">${ph}</option>${o.map(x=>`<option ${x===cur?'selected':''}>${x}</option>`).join('')}</select>`;
+const tsel=v=>{const m=/(\d{1,2}):(\d{2})\s*$/.exec(v||''),h=m?p2(+m[1]):'',mi=m?m[2]:'';return sel('th',HH,h,'시')+sel('tm',mi&&!MM.includes(mi)?[...MM,mi].sort():MM,mi,'분')};
+const tp=(p,v,l)=>`<div class="tp" data-tp="${p}"><span class="sub">${l}</span>${tsel(v)}</div>`;
+const dtp=(p,v,l)=>{const m=/^(\d{4}-\d{2}-\d{2})/.exec(v||'');return `<div class="tp" data-tp="${p}"><span class="sub">${l}</span><input type="date" class="td" value="${m?m[1]:''}">${tsel(v)}</div>${v&&!m&&!/^\d{1,2}:\d{2}$/.test(v)?`<div class="sub">기존 입력: ${esc(v)}</div>`:''}`};
+const fdt=v=>{const m=/^(\d{4})-(\d{2})-(\d{2})(?:\s+(\d{1,2}:\d{2}))?$/.exec(v||'');if(!m)return esc(v);return `${m[2]}/${m[3]} (${W[new Date(`${m[1]}-${m[2]}-${m[3]}T00:00`).getDay()]})${m[4]?' '+m[4]:''}`};
+const ft=o=>o.dep||o.arr?`${esc(o.dep||'')} → ${esc(o.arr||'')}${o.plus?` (+${esc(o.plus)}일)`:''}`:esc(o.time||'');
+const fld=(p,n,l,t,v)=>t==='t'?tp(p,v,l):t==='dt'?dtp(p,v,l):t==='d'?`<label class="sub">${l}${inp(p,v,l,'date')}</label>${v&&!/^\d{4}-\d{2}-\d{2}$/.test(v)?`<div class="sub">기존 입력: ${esc(v)}</div>`:''}`:t==='p'?`<label class="sub">${l} <select data-p="${p}"><option value="">당일 도착</option><option value="1" ${v==='1'?'selected':''}>+1일</option><option value="2" ${v==='2'?'selected':''}>+2일</option></select></label>`:/^(note|text)$/.test(n)?ta(p,v,l):inp(p,v,l);
 const V={
-hotels:o=>`<div class="card ci" data-e="🏨"><b>${esc(o.name)}</b><div class="mut">${fl(o.city)} ${esc(o.city)}</div>${kv('체크인',esc(o.ci))}${kv('체크아웃',esc(o.co))}${kv('주소',o.addr&&mp(o.addr))}</div>`,
-flights:o=>`<div class="card bpc"><div class="mut">✈ ${esc(o.no)} · ${esc(o.date)}</div>${rt(o.route)}<div style="margin-top:6px">${esc(o.time)}</div></div>`,
-tickets:o=>`<div class="card tk ci" data-e="🎫"><b>${esc(o.title)}</b><div class="mut">${esc(o.date)}</div><div class="note">${esc(o.note)}</div>${isU(o.url)?`<a href="${esc(o.url)}" target="_blank" rel="noopener">티켓 열기</a>`:''}</div>`,
+hotels:o=>`<div class="card ci" data-e="🏨"><b>${esc(o.name)}</b><div class="mut">${fl(o.city)} ${esc(o.city)}</div>${kv('체크인',fdt(o.ci))}${kv('체크아웃',fdt(o.co))}${kv('주소',o.addr&&mp(o.addr))}</div>`,
+flights:o=>`<div class="card bpc"><div class="mut">✈ ${esc(o.no)} · ${fdt(o.date)}</div>${rt(o.route)}<div style="margin-top:6px">${ft(o)}</div></div>`,
+tickets:o=>`<div class="card tk ci" data-e="🎫"><b>${esc(o.title)}</b><div class="mut">${fdt(o.date)}</div><div class="note">${esc(o.note)}</div>${isU(o.url)?`<a href="${esc(o.url)}" target="_blank" rel="noopener">티켓 열기</a>`:''}</div>`,
 shop:o=>`<div class="card ci" data-e="🛍️"><b>${esc(o.name)}</b><div class="mut">${fl(o.city)} ${esc(o.city)} · ${esc(o.type)}</div>${o.addr?`<div>${mp(o.addr)}</div>`:''}</div>`,
 transport:o=>`<div class="card ci" data-e="🚇"><b>${fl(o.city)} ${esc(o.city)}</b><div class="note" style="color:var(--ink)">${esc(o.text)}</div></div>`,
 items:o=>`<div class="tl"><span class="tm">${esc(o.time)}</span><b>${esc(o.title)}</b> ${o.place?mp(o.place,'지도'):''}<div class="note">${esc(o.note)}</div></div>`,
 foods:o=>`<div class="card ci" data-e="🍽️"><b>${esc(o.name)}</b><div class="mut">${esc(o.cat)}${o.rate?' · ★'+esc(o.rate):''}</div><div class="note">${esc(o.note)}</div></div>`};
-const form=(path,o,k)=>SC[k].split(',').map(x=>x.split(':')).map(([n,l])=>/^(note|text)$/.test(n)?ta(`${path}.${n}`,o[n],l):inp(`${path}.${n}`,o[n],l)).join('');
+const form=(path,o,k)=>SC[k].split(',').map(x=>x.split(':')).map(([n,l,t])=>fld(`${path}.${n}`,n,l,t,o[n])).join('');
 const acts=(path,i)=>`<div class="acts"><button data-a="mv" data-k="${path}" data-i="${i}" data-s="-1">↑</button><button data-a="mv" data-k="${path}" data-i="${i}" data-s="1">↓</button><button class="dng" data-a="del" data-k="${path}" data-i="${i}">삭제</button></div>`;
 const lst=(path,k,cls='grid')=>`<div class="${ui.edit?'':cls}">`+get(path).map((o,i)=>ui.edit?`<div class="card">${form(`${path}.${i}`,o,k)}${acts(path,i)}</div>`:V[k](o)).join('')+`</div>`+(ui.edit?`<button class="add" data-a="add" data-k="${path}" data-t="${k}">+ 추가</button>`:'');
 const sec=(k,body)=>`<section id="${k}"><div class="sh"><span class="ic">${IC[k]}</span><div><div class="en">${EN[k]}</div><h2>${LB[k]}</h2></div></div>${body}</section>`;
 const itemsEd=(d,i)=>d.items.map((t,j)=>{const q=`days.${i}.items.${j}`,id=`${i}.${j}`;return `<div class="card" data-dt="${id}"><div class="row"><span class="hd" draggable="true" data-dr="${id}" title="끌어서 이동">⠿</span><b style="flex:1">${esc(t.time)} ${esc(t.title)||'(새 일정)'}</b><select data-mv="${id}"><option value="">Day 이동…</option>${S.days.map((x,n)=>`<option value="${n}">Day ${n+1}</option>`).join('')}</select></div>${form(q,t,'items')}<div class="sub">${t.lat!=null?'📍 위치 확인됨':t.place?(t.nf?'⚠️ 위치를 찾지 못했어요. 장소명을 더 구체적으로 적어 보세요':'위치 미확인'):''}</div>${acts(`days.${i}.items`,j)}</div>`}).join('')+`<div class="dz" data-dt="${i}.${d.items.length}">여기로 끌어다 놓으면 맨 뒤로 이동</div><button class="add" data-a="add" data-k="days.${i}.items" data-t="items">+ 일정 추가</button>`;
 const day=(d,i)=>{const p=`days.${i}`;
-  const ed=ui.edit?`${inp(p+'.city',d.city,'도시')}${inp(p+'.flag',d.flag||'','국기/이모지 (비우면 도시에 맞게 자동)')}${inp(p+'.img',d.img,'Day 대표 이미지 주소 (https://…)')}<div class="acts"><button data-a="mvday" data-i="${i}" data-s="-1">↑ Day</button><button data-a="mvday" data-i="${i}" data-s="1">↓ Day</button><button class="dng" data-a="delday" data-i="${i}">Day 삭제</button></div>`:(isU(d.img)?`<div class="dimg" data-bg="${esc(d.img)}"></div>`:'');
+  const ed=ui.edit?`${inp(p+'.city',d.city,'도시')}${inp(p+'.flag',d.flag||'','국기/이모지 (비우면 도시에 맞게 자동)')}${inp(p+'.img',d.img,'Day 대표 이미지 주소 (https://…)')}<div class="acts"><button data-a="mvday" data-i="${i}" data-s="-1">↑ Day</button><button data-a="mvday" data-i="${i}" data-s="1">↓ Day</button><button data-a="sortday" data-i="${i}">⏱ 시간순 정렬</button><button class="dng" data-a="delday" data-i="${i}">Day 삭제</button></div>`:(isU(d.img)?`<div class="dimg" data-bg="${esc(d.img)}"></div>`:'');
   return `<section id="d${i+1}"><div class="dh"><span class="dn">D${p2(i+1)}</span><div><div class="en">${dtx(i)}</div><h2>${fl(d.city,d)} ${ui.edit?'':esc(d.city)}</h2></div></div>${ed}${ui.edit?itemsEd(d,i):d.items.map(V.items).join('')}${d.foods.length||ui.edit?`<h3>🍽️ 추천 맛집 ${d.foods.length}</h3>`+lst(p+'.foods','foods'):''}</section>`};
 const prep=()=>['필수','기타'].map(g=>{const a=S.check.map((c,i)=>[c,i]).filter(([c])=>c.g===g);return a.length||ui.edit?`<h3>${g} ${a.length}개</h3><div class="card">`+a.map(([c,i])=>ui.edit?`<div class="row">${inp(`check.${i}.t`,c.t,'준비물')}<select data-p="check.${i}.g"><option ${g==='필수'?'selected':''}>필수</option><option ${g==='기타'?'selected':''}>기타</option></select><button class="dng" data-a="del" data-k="check" data-i="${i}">×</button></div>`:`<label class="ck ${c.done?'done':''}"><input type="checkbox" data-a="chk" data-i="${i}" ${c.done?'checked':''}><span>${esc(c.t)}</span></label>`).join('')+'</div>':''}).join('')+(ui.edit?'<button class="add" data-a="addck">+ 준비물 추가</button>':'');
 const emptyK=k=>({overview:!S.days.length&&!S.overview,map:!S.days.some(d=>d.items.some(t=>t.lat!=null)),glance:!S.days.length,flights:!S.flights.length,hotels:!S.hotels.length,days:!S.days.length,tickets:!S.tickets.length,transport:!S.transport.length,shop:!S.shop.length,prep:!S.check.length,tips:!S.tips.trim()})[k];
@@ -231,6 +240,7 @@ document.addEventListener('click',e=>{
   else if(a==='today'){const n=Math.round((today()-dt(0))/864e5);$('d'+(n>=0&&n<S.days.length?n+1:1))?.scrollIntoView();ren=sv=false}
   else if(a==='share'){ren=sv=false;try{navigator.clipboard.writeText(location.href);note('링크 복사됨')}catch(x){note('주소창의 링크를 복사하세요')}}
   else if(a==='addday')S.days.push({city:S.days.at(-1)?.city||'',items:[],foods:[],img:''});
+  else if(a==='sortday')S.days[i].items.sort((x,y)=>(x.time||'99:99').localeCompare(y.time||'99:99'));
   else if(a==='delday')S.days.splice(i,1);
   else if(a==='mvday'){const j=i+s;if(j>=0&&j<S.days.length)[S.days[i],S.days[j]]=[S.days[j],S.days[i]]}
   else if(a==='add')get(k).push(Object.fromEntries(SC[b.dataset.t].split(',').map(x=>[x.split(':')[0],''])));
@@ -244,7 +254,8 @@ document.addEventListener('click',e=>{
   if(sv)save();if(ren)render();
 });
 document.addEventListener('change',e=>{
-  const t=e.target,mv=t.dataset.mv;
+  const t=e.target,mv=t.dataset.mv,w=t.closest&&t.closest('[data-tp]');
+  if(w){const h=w.querySelector('.th').value,tmS=w.querySelector('.tm'),dI=w.querySelector('.td');if(h&&!tmS.value)tmS.value='00';const tm=h?`${h}:${tmS.value||'00'}`:'';set(w.dataset.tp,dI?[dI.value,tm].filter(Boolean).join(' '):tm);save();if(/\.time$/.test(w.dataset.tp))render();return}
   if(mv){if(t.value==='')return;const [d,i]=mv.split('.').map(Number),n=+t.value;moveItem(d,i,n,S.days[n].items.length);save();render();return}
   const p=t.dataset.p;if(!p)return;
   set(p,t.value);
